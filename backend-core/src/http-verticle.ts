@@ -4,8 +4,8 @@ import { CoreVerticle } from "./core-verticle";
 
 
 export class HttpVerticle extends CoreVerticle {
-    private port: number;
-    private validator: Validator;
+    private readonly port: number;
+    private readonly validator: Validator;
     private readonly eventBinding: any;
     /**
      *
@@ -15,10 +15,7 @@ export class HttpVerticle extends CoreVerticle {
         this.port = this.config.port as number;
         this.eventBinding = this.config.eventBinding;
         this.validator = new Validator();
-        Object.keys(this.eventBinding).forEach(key => {
-            const schema = this.eventBinding[key].schema
-            this.validator.addSchema(schema, schema.id)
-        });
+        this.registerValidator();
     }
     protected onInit(){
         return new Promise<number>(res => {
@@ -45,5 +42,11 @@ export class HttpVerticle extends CoreVerticle {
             this.info(`start at ${this.port}`)
             res(0);
         })
+    }
+    private registerValidator(){
+        Object.keys(this.eventBinding).forEach(key => {
+            const schema = this.eventBinding[key].schema
+            this.validator.addSchema(schema, schema.id)
+        });
     }
 }

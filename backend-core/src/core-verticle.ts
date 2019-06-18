@@ -17,7 +17,7 @@ export abstract class CoreVerticle {
         setTimeout(async () => {
             await this.onInit();
             await this.afterInit();
-        }, 10)
+        }, 1)
     }
     protected onInit(): Promise<number>{
         return new Promise<number>(res => {
