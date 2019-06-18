@@ -7,6 +7,8 @@ export class HttpVerticle extends CoreVerticle {
     private readonly port: number;
     private readonly validator: Validator;
     private readonly eventBinding: any;
+    private readonly allowUrl: string;
+    private readonly allowMethod: string;
     /**
      *
      */
@@ -15,11 +17,18 @@ export class HttpVerticle extends CoreVerticle {
         this.port = this.config.port as number;
         this.eventBinding = this.config.eventBinding;
         this.validator = new Validator();
+        this.allowMethod = this.config.allowMethod;
+        this.allowUrl = this.config.allowUrl;
         this.registerValidator();
     }
     protected onInit(){
         return new Promise<number>(res => {
             const server = http.createServer((req, res) => {
+                if(this.allowMethod !== req.method || this.allowUrl !== req.url) {
+                    res.end('method not support');
+                    return;
+                }
+                // TODO - handle empty body
                 req.on('data', async (chunk) => {
                   const regBody: Uint8Array[] = [];
                   regBody.push(chunk);
@@ -30,7 +39,6 @@ export class HttpVerticle extends CoreVerticle {
                   this.info(`validate event ${schema}: ${validationResult.toString()}`)
                   res.end(`validate event ${schema}: ${validationResult.toString()}`)
                 })
-                //res.end('data received no reg body');
               });
             server.listen(this.port);
             res(0);
