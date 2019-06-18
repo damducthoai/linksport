@@ -6,7 +6,10 @@
           "request": "launch",
           "name": "Debug-BEC-Nodemon",
           "runtimeExecutable": "nodemon",
-          "program": "${workspaceFolder}/backend-core/lib/index.js ${workspaceFolder}/backend-core/config.json",
+          "program": "${workspaceFolder}/backend-core/lib/index.js",
+          "args":[
+              "${workspaceFolder}/backend-core/config.json"
+          ],
           "restart": true,
           "console": "integratedTerminal",
           "internalConsoleOptions": "neverOpen"
@@ -17,6 +20,9 @@
           "request": "launch",
           "name": "Debug-BEC-Node",
           "program": "${workspaceFolder}/backend-core/src/index.ts",
+          "args":[
+            "${workspaceFolder}/backend-core/config.json"
+          ],
           "sourceMaps": true,
           "smartStep": true,
           "restart": true,
