@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "start": "node lib/index.js",
-    "startx": "nodemon lib/index.js"
+    "startx": "nodemon lib/index.js config.json"
   },
   "keywords": [
     "rpc",
@@ -33,6 +33,7 @@
     "@types/node": "^12.0.8",
     "@vertx/core": "^3.7.1",
     "@vertx/web": "^3.7.1",
-    "backend-base": "file:../backend-base"
+    "backend-base": "file:../backend-base",
+    "winston": "^3.2.1"
   }
 }

@@ -1,0 +1,10 @@
+{
+    "profile": "dev",
+    "HttpVerticle": {
+        "port": 8888
+    },
+    "eventBinding": {
+        "login": "login_queue_dev",
+        "register": "register_queue_dev"
+    }
+}

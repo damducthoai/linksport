@@ -1,18 +1,24 @@
+import * as fs from 'fs';
 import * as http from 'http';
+import { HttpVerticle } from './http-verticle';
+const args = process.argv.slice(2);
 
-const server = http.createServer((req, res) => {
+const config = fs.readFileSync(args[0], 'utf8');
+const configJson = JSON.parse(config);
+const server = new HttpVerticle(configJson);
+// const port = configJson['httpServer']['port'] | 8080;
 
- 
-
-  req.on('data', (chunk) => {
-    const regBody: Uint8Array[] = [];
-    regBody.push(chunk);
-    const regBodyJson = Buffer.concat(regBody).toString();
-    res.end('data received')
-  })
-
-});
-server.on('clientError', (err, socket) => {
-  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
-});
-server.listen(8000);
+// const server = http.createServer((req, res) => {
+//   req.on('data', (chunk) => {
+//     const regBody: Uint8Array[] = [];
+//     regBody.push(chunk);
+//     const regBodyString = Buffer.concat(regBody).toString();
+//     const regBodyJson = JSON.parse(regBodyString);
+//     res.end('data received')
+//   })
+// });
+// server.on('clientError', (err, socket) => {
+//   socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+// });
+// server.listen(port);
+// console.log('http server start at ', port);

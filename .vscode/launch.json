@@ -6,7 +6,7 @@
           "request": "launch",
           "name": "Debug-BEC-Nodemon",
           "runtimeExecutable": "nodemon",
-          "program": "${workspaceFolder}/backend-core/lib/index.js",
+          "program": "${workspaceFolder}/backend-core/lib/index.js ${workspaceFolder}/backend-core/config.json",
           "restart": true,
           "console": "integratedTerminal",
           "internalConsoleOptions": "neverOpen"
