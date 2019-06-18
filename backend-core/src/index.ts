@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as http from 'http';
 import { HttpVerticle } from './http-verticle';
 const args = process.argv.slice(2);
 

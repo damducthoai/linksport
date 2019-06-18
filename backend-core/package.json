@@ -34,6 +34,7 @@
     "@vertx/core": "^3.7.1",
     "@vertx/web": "^3.7.1",
     "backend-base": "file:../backend-base",
+    "jsonschema": "^1.2.4",
     "winston": "^3.2.1"
   }
 }

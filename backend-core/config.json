@@ -1,10 +1,40 @@
 {
     "profile": "dev",
     "HttpVerticle": {
-        "port": 8888
-    },
-    "eventBinding": {
-        "login": "login_queue_dev",
-        "register": "register_queue_dev"
+        "port": 8888,
+        "eventBinding": {
+            "login": {
+                "addr": "login_queue_dev",
+                "schema": {
+                    "id": "/Login",
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        }
+                    },
+                    "required": ["user", "password"]
+                }
+            },
+            "register": {
+                "addr": "register_queue_dev",
+                "schema": {
+                    "id": "/Register",
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "required": ["user", "password"]
+                    }
+                }
+            }
+        }
     }
 }
