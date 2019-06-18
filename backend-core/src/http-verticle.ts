@@ -29,7 +29,7 @@ export class HttpVerticle extends CoreVerticle {
 
     protected afterInit(){
         return new Promise<number>(res => {
-            console.log(this.name, `start at port ${this.port}`);
+            this.info(`${this.port}`)
             res(0);
         })
     }
