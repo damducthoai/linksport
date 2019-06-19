@@ -1,9 +1,9 @@
 import * as winston from 'winston';
 export abstract class CoreVerticle {
+    protected readonly extraConfig = {};
     protected readonly name: string;
     protected readonly config: any;
     private readonly logger: any;
-    protected readonly extraConfig = {};
     /**
      *
      */
