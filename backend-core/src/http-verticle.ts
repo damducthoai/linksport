@@ -13,7 +13,7 @@ export class HttpVerticle extends CoreVerticle {
      *
      */
     constructor(config: any) {
-        super(config, "HttpVerticle");  
+        super(config, "HttpVerticle");
         this.port = this.config.port as number;
         this.eventBinding = this.config.eventBinding;
         this.validator = new Validator();
@@ -49,6 +49,7 @@ export class HttpVerticle extends CoreVerticle {
     protected afterInit(){
         return new Promise<number>(res => {
             this.info(`start at ${this.port}`)
+            this.info(`extra config ${JSON.stringify(this.extraConfig)}`)
             res(0);
         })
     }

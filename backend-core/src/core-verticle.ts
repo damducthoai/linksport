@@ -3,10 +3,11 @@ export abstract class CoreVerticle {
     protected readonly name: string;
     protected readonly config: any;
     private readonly logger: any;
+    protected readonly extraConfig = {};
     /**
      *
      */
-    constructor(config: any, name: string) {
+    constructor(config: any, name: string, private extraConfigKeys?: string[]) {
         this.name = name;
         this.config = config[name];
         this.logger = winston.createLogger({
@@ -14,6 +15,12 @@ export abstract class CoreVerticle {
                 new winston.transports.Console()
             ]
         });
+        if(extraConfigKeys){
+            extraConfigKeys.forEach((k,i) => {
+                const curConfig = config[k];
+                Object.assign(this.extraConfig, curConfig);
+            })
+        }
         setTimeout(async () => {
             await this.onInit();
             await this.afterInit();
