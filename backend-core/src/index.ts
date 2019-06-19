@@ -1,10 +1,10 @@
-import * as fs from 'fs';
-import { HttpVerticle } from './http-verticle';
-const args = process.argv.slice(2);
+// import * as fs from 'fs';
+// import { HttpVerticle } from './http-verticle';
+// const args = process.argv.slice(2);
 
-const config = fs.readFileSync(args[0], 'utf8');
-const configJson = JSON.parse(config);
-const server = new HttpVerticle(configJson);
+// const config = fs.readFileSync(args[0], 'utf8');
+// const configJson = JSON.parse(config);
+// const server = new HttpVerticle(configJson);
 // const port = configJson['httpServer']['port'] | 8080;
 
 // const server = http.createServer((req, res) => {
@@ -21,3 +21,23 @@ const server = new HttpVerticle(configJson);
 // });
 // server.listen(port);
 // console.log('http server start at ', port);
+import { AppLauncher } from 'backend-base/lib/index'
+import { HttpVerticle } from './http-verticle';
+
+export class BackendCoreLauncher extends AppLauncher {
+  /**
+   *
+   */
+  constructor() {
+    super();
+  }
+
+  public deploy(): Promise<number> {
+    return new Promise((accept, reject) => {
+      const server = new HttpVerticle(this.config);
+    });
+  }
+  
+}
+const launcher = new BackendCoreLauncher();
+console.log('launcher started');
