@@ -23,7 +23,6 @@ export class HttpVerticle extends CoreVerticle {
     }
     protected onInit(){
         return new Promise<number>(res => {
-// tslint:disable-next-line: no-shadowed-variable
             const server = http.createServer((req, response) => {
                 if(this.allowMethod !== req.method || this.allowUrl !== req.url) {
                     response.end('method not support');
@@ -41,6 +40,9 @@ export class HttpVerticle extends CoreVerticle {
                   response.end(`validate event ${schema}: ${validationResult.toString()}`)
                 })
               });
+            server.on('clientError', (err, socket) => {
+                socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+            });
             server.listen(this.port);
             res(0);
         })
