@@ -23,9 +23,10 @@ export class HttpVerticle extends CoreVerticle {
     }
     protected onInit(){
         return new Promise<number>(res => {
-            const server = http.createServer((req, res) => {
+// tslint:disable-next-line: no-shadowed-variable
+            const server = http.createServer((req, response) => {
                 if(this.allowMethod !== req.method || this.allowUrl !== req.url) {
-                    res.end('method not support');
+                    response.end('method not support');
                     return;
                 }
                 // TODO - handle empty body
@@ -37,7 +38,7 @@ export class HttpVerticle extends CoreVerticle {
                   const schema = this.eventBinding.login.schema
                   const validationResult = this.validator.validate(regBodyJson, schema).valid
                   this.info(`validate event ${schema}: ${validationResult.toString()}`)
-                  res.end(`validate event ${schema}: ${validationResult.toString()}`)
+                  response.end(`validate event ${schema}: ${validationResult.toString()}`)
                 })
               });
             server.listen(this.port);
