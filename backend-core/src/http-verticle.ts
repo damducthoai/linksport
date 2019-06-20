@@ -1,6 +1,7 @@
+import { CoreVerticle } from "backend-base/src/index";
 import * as http from 'http';
 import { Validator } from 'jsonschema';
-import { CoreVerticle } from "./core-verticle";
+
 
 
 export class HttpVerticle extends CoreVerticle {
