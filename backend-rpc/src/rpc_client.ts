@@ -1,14 +1,19 @@
-import { IRpcConfig } from './rpc_config';
+import { CoreVerticle, IRpcClient } from 'backend-base/lib/index'
 
-export abstract class RpcClient {
+export abstract class RpcClient extends CoreVerticle implements IRpcClient {
+
   private readonly queue: string;
 
   private readonly server: string;
-  /**
-   *
-   */
-  protected constructor(config: IRpcConfig) {
-    this.queue = config.queue;
-    this.server = config.server;
+
+  constructor(config: any, name: string) {
+    super(config, name);
+    this.queue = this.config.this.queue;
+    this.server = this.config.server;
   }
+
+  public sendMessage(message: string): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
+  
 }

@@ -1,6 +1,8 @@
 import * as amqp from 'amqplib/callback_api';
+import { IRpcServer } from 'backend-base/lib/index'
 import { IRpcConfig } from './rpc_config';
-export abstract class RpcServer {
+export abstract class RpcServer implements IRpcServer {
+  
   private readonly queue: string;
 
   private readonly server: string;
@@ -14,6 +16,10 @@ export abstract class RpcServer {
     this.server = config.server;
     this.name = config.name;
     this.onInit();
+  }
+
+  public onMessage(message: string): Promise<string> {
+    throw new Error("Method not implemented.");
   }
 
   protected onInit() {
@@ -30,7 +36,7 @@ export abstract class RpcServer {
         });
         channel.prefetch(1);
         channel.consume(this.queue, async (msg: any) => {
-          const result = await this.processRequest(msg);
+          const result = await this.onMessage(msg);
           channel.sendToQueue(msg.properties.replyTo, Buffer.from(result + ''), {
             correlationId: msg.properties.correlationId,
           });
@@ -39,6 +45,4 @@ export abstract class RpcServer {
       });
     });
   }
-
-  protected abstract async processRequest(req: any): Promise<any>;
 }
