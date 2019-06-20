@@ -1,9 +1,12 @@
-
+import * as events from 'events';
 import * as fs from 'fs';
 import * as winston from 'winston';
-export abstract class AppLauncher {
-    protected readonly config:any;
 
+export abstract class AppLauncher {
+
+    protected readonly config:any;
+    protected readonly globalEvents = new events.EventEmitter();;
+    
     private readonly name = "Launcher";
     private readonly logger: any;
     

@@ -1,6 +1,5 @@
 import * as amqp from 'amqplib/callback_api';
 import { IRpcServer } from 'backend-base/lib/index'
-import { IRpcConfig } from './rpc_config';
 export abstract class RpcServer implements IRpcServer {
   
   private readonly queue: string;
@@ -11,7 +10,7 @@ export abstract class RpcServer implements IRpcServer {
   /**
    *
    */
-  protected constructor(config: IRpcConfig) {
+  protected constructor(config: any) {
     this.queue = config.queue;
     this.server = config.server;
     this.name = config.name;
