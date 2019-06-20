@@ -10,7 +10,7 @@
     "watch": "tsc --watch",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "start": "node lib/index.js",
+    "start": "node lib/index.js config.json",
     "startx": "nodemon lib/index.js config.json"
   },
   "keywords": [
