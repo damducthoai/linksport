@@ -3,10 +3,7 @@ import * as events from 'events';
 import * as http from 'http';
 import { Validator } from 'jsonschema';
 
-
-
 export class HttpVerticle extends CoreVerticle {
-    
     
     private readonly port: number;
     private readonly validator: Validator;

@@ -31,7 +31,7 @@ export class BackendCoreLauncher extends AppLauncher {
    */
   constructor() {
     super();
-    
+
   }
 
   public deploy(): Promise<number> {
@@ -43,4 +43,3 @@ export class BackendCoreLauncher extends AppLauncher {
   
 }
 const launcher = new BackendCoreLauncher();
-console.log('launcher started');
