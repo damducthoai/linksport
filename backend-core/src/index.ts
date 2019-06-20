@@ -21,7 +21,7 @@
 // });
 // server.listen(port);
 // console.log('http server start at ', port);
-import { AppLauncher } from 'backend-base/lib/index'
+import { AppLauncher } from 'backend-base/lib/index';
 import { HttpVerticle } from './http-verticle';
 
 export class BackendCoreLauncher extends AppLauncher {

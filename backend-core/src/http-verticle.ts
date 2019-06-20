@@ -1,4 +1,4 @@
-import { CoreVerticle } from "backend-base/src/index";
+import { CoreVerticle } from "backend-base/lib/index";
 import * as http from 'http';
 import { Validator } from 'jsonschema';
 
