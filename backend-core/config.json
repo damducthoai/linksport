@@ -38,5 +38,11 @@
                 }
             }
         }
+    },
+    "cassandra": {
+        "username": "cassandra",
+        "password": "cassandra",
+        "host": "3.0.101.223",
+        "port": 9042
     }
 }
