@@ -41,8 +41,11 @@ export class HttpVerticle extends CoreVerticle {
                   regBody.push(chunk);
                   const regBodyString = Buffer.concat(regBody).toString();
                   const regBodyJson = JSON.parse(regBodyString);
-                  const schema = this.eventBinding.login.schema
+                  const service = regBodyJson.service
+                  const schema = this.eventBinding[service].schema
+                  const addr = this.eventBinding[service].addr
                   const validationResult = this.validator.validate(regBodyJson, schema).valid
+                  this.globalEvents.emit(addr, regBodyString);
                   this.info(`validate event ${schema}: ${validationResult.toString()}`)
                   response.end(`validate event ${schema}: ${validationResult.toString()}`)
                 })

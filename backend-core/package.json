@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "backend-base": "file:../backend-base",
+    "backend-rpc": "file:../backend-rpc",
     "jsonschema": "^1.2.4",
     "winston": "^3.2.1"
   }

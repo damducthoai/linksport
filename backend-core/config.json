@@ -11,6 +11,9 @@
                     "id": "/Login",
                     "type": "object",
                     "properties": {
+                        "service": {
+                            "type": "string"
+                        },
                         "user": {
                             "type": "string"
                         },
@@ -27,13 +30,22 @@
                     "id": "/Register",
                     "type": "object",
                     "properties": {
-                        "user": {
+                        "service": {
                             "type": "string"
                         },
-                        "password": {
-                            "type": "string"
+                        "data": {
+                            "type": "object",
+                            "properties":{
+                                "user": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["user", "password"]
                         },
-                        "required": ["user", "password"]
+                        "required": ["service", "data"]
                     }
                 }
             }
