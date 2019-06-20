@@ -31,24 +31,21 @@ export class HttpVerticle extends CoreVerticle {
     protected onInit(){
         return new Promise<number>(res => {
             const server = http.createServer((req, response) => {
-                this.globalEvents.emit('register_queue_dev', 'test');
-                response.end('test');
-                this.info('receive request http')
-                // if(this.allowMethod !== req.method || this.allowUrl !== req.url) {
-                //     response.end('method not support');
-                //     return;
-                // }
-                // // TODO - handle empty body
-                // req.on('data', async (chunk) => {
-                //   const regBody: Uint8Array[] = [];
-                //   regBody.push(chunk);
-                //   const regBodyString = Buffer.concat(regBody).toString();
-                //   const regBodyJson = JSON.parse(regBodyString);
-                //   const schema = this.eventBinding.login.schema
-                //   const validationResult = this.validator.validate(regBodyJson, schema).valid
-                //   this.info(`validate event ${schema}: ${validationResult.toString()}`)
-                //   response.end(`validate event ${schema}: ${validationResult.toString()}`)
-                // })
+                if(this.allowMethod !== req.method || this.allowUrl !== req.url) {
+                    response.end('method not support');
+                    return;
+                }
+                // TODO - handle empty body
+                req.on('data', async (chunk) => {
+                  const regBody: Uint8Array[] = [];
+                  regBody.push(chunk);
+                  const regBodyString = Buffer.concat(regBody).toString();
+                  const regBodyJson = JSON.parse(regBodyString);
+                  const schema = this.eventBinding.login.schema
+                  const validationResult = this.validator.validate(regBodyJson, schema).valid
+                  this.info(`validate event ${schema}: ${validationResult.toString()}`)
+                  response.end(`validate event ${schema}: ${validationResult.toString()}`)
+                })
               });
             server.on('clientError', (err, socket) => {
                 socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
