@@ -31,6 +31,8 @@
     "@types/node": "^12.0.8"
   },
   "dependencies": {
+    "@types/amqplib": "^0.5.12",
+    "amqplib": "^0.5.3",
     "backend-base": "file:../backend-base",
     "backend-rpc": "file:../backend-rpc",
     "jsonschema": "^1.2.4",

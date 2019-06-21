@@ -4,11 +4,11 @@ import * as events from 'events';
 
 export abstract class RpcClient extends CoreVerticle {
 
-  private readonly queue: string;
+  protected connection : any;
 
-  private readonly server: string;
+  protected readonly queue: string;
 
-  private connection : any;
+  protected readonly server: string;
 
   constructor(config: any, name: string, globalEvents: events) {
     super(config, name, globalEvents);

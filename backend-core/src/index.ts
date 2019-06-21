@@ -23,7 +23,9 @@
 // console.log('http server start at ', port);
 import { AppLauncher } from 'backend-base/lib/index';
 import { HttpVerticle } from './http-verticle';
+import { RabbitRpcClient } from './rabbit-rpc-client';
 import { RegisterVerticle } from './verticle/RegisterVerticle';
+
 
 export class BackendCoreLauncher extends AppLauncher {
   /**
@@ -38,6 +40,10 @@ export class BackendCoreLauncher extends AppLauncher {
     return new Promise((accept, reject) => {
       const server = new HttpVerticle(this.config, this.globalEvents);
       const regiser = new RegisterVerticle(this.config, this.globalEvents);
+      const rpcclient = new RabbitRpcClient(this.config, this.globalEvents);
+      setTimeout(() => {
+        rpcclient.sendMessage('ahihi');
+      }, 5000)
     });
   }
   
