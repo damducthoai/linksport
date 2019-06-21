@@ -9,7 +9,6 @@ export class RabbitRpcClient extends RpcClient {
 
     constructor(config: any, globalEvents: events) {
         super(config, "RabbitRpcClient", globalEvents);
-        
     }
 
     public sendMessage(message: string): Promise<string> {
@@ -45,7 +44,7 @@ export class RabbitRpcClient extends RpcClient {
                 });
               });
         })
-    } 
+    }
 
     protected onEvent(event: string, globalEvents: events): void {
         throw new Error("Method not implemented.");
