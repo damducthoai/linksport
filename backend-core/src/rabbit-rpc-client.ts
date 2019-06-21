@@ -5,15 +5,11 @@ import { RpcClient } from '../../backend-rpc/lib/index';
 
 export class RabbitRpcClient extends RpcClient {
 
+    private uuidv5 = require('uuid/v5');
+
     constructor(config: any, globalEvents: events) {
         super(config, "RabbitRpcClient", globalEvents);
-
-    }
-
-    public generateUuid = () => {
-        return Math.random().toString() +
-               Math.random().toString() +
-               Math.random().toString();
+        
     }
 
     public sendMessage(message: string): Promise<string> {
@@ -28,7 +24,7 @@ export class RabbitRpcClient extends RpcClient {
                   if (error2) {
                     throw error2;
                   }
-                  const correlationId = this.generateUuid();
+                  const correlationId = this.uuidv5.DNS;
                   this.info(`send request to: ${correlationId}, msg: ${message}`);
 
                   channel.consume(q.queue, (msg) => {
@@ -49,7 +45,7 @@ export class RabbitRpcClient extends RpcClient {
                 });
               });
         })
-    }
+    } 
 
     protected onEvent(event: string, globalEvents: events): void {
         throw new Error("Method not implemented.");
