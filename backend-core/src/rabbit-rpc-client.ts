@@ -24,19 +24,30 @@ export class RabbitRpcClient extends RpcClient {
                     throw error2;
                   }
                   const correlationId = this.uuidv5.DNS;
+
+                  let timeout = setTimeout(() => {
+                    this.info('timeout');
+                    channel.close(cb => {
+                        this.info('close chanel')
+                    })
+                    fail('time out');
+                  }, 1000*10)
+                    
                   this.info(`send request to: ${correlationId}, msg: ${message}`);
 
                   channel.consume(q.queue, (msg) => {
+                    clearTimeout(timeout);
                     if(!msg) {
                         throw new Error('Something bad happened');
                     }
                     if (msg.properties.correlationId === correlationId) {
+                        channel.ack(msg as amqp.Message);
                         success(msg.content.toString());
                     }
                   }, {
                     noAck: true
                   });
-            
+
                   channel.sendToQueue(this.queue,
                     Buffer.from(message),{ 
                       correlationId: `${correlationId}`, 
