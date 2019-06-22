@@ -1,7 +1,7 @@
 {
     "profile": "dev",
     "RegisterHandler": {
-        "processTimeOut": 10000,
+        "processTimeOut": 100000,
         "name": "RegisterHandler",
         "queue": "register_queue_dev",
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
@@ -10,8 +10,11 @@
             "user": "postgres",
             "host": "3.0.101.223",
             "database": "postgres",
+            "max": 200,
             "password": "mysecretpassword",
-            "port": 5432
+            "port": 5432,
+            "idleTimeoutMillis": 30000,
+            "connectionTimeoutMillis": 2000
         }
     }
 }

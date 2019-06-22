@@ -20,7 +20,9 @@ export class RegisterHandler extends RpcServer {
         this.saltRounds = this.config.saltRounds;
     }
     public onMessage(message: string): Promise<string>{
+        this.info(`receive request: ${message}`)
         const curId = this.idGenerator.generate();
+        this.info(`request id: ${curId}`);
         const data : {
             user: string,
             password: string
@@ -34,7 +36,7 @@ export class RegisterHandler extends RpcServer {
             const client = await this.pool.connect()
             const password = await bcrypt.hash(data.password, this.saltRounds)
             const params = [curId, data.user, password, 0];
-
+        
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
                     error('user name exists')
@@ -42,6 +44,7 @@ export class RegisterHandler extends RpcServer {
                 if(res){
                     success("" + curId);
                 }
+                client.release();
                 clearInterval(timeOut);
             })
         });
