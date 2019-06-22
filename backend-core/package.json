@@ -1,7 +1,7 @@
 {
   "name": "backend-core",
   "version": "1.0.0",
-  "description": "",
+  "description": "core linkedsport",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
