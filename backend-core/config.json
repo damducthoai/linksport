@@ -56,12 +56,9 @@
         "password": "cassandra",
         "host": "3.0.101.223",
         "port": 9042
-    }, 
-    "RegisterVerticle": {
-        "eventHandler": "register_queue_dev"
     },
     "RabbitRpcClient": {
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
-        "timeout": 10000
+        "timeout": 1000
     }
 }

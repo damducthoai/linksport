@@ -1,7 +1,10 @@
 import { CoreVerticle } from "backend-base/lib/index";
+import { RpcClient } from "backend-rpc/lib/rpc_client";
 import * as events from 'events';
 import * as http from 'http';
 import { Validator } from 'jsonschema';
+import { launcher } from './index'
+
 
 export class HttpVerticle extends CoreVerticle {
     
@@ -10,9 +13,7 @@ export class HttpVerticle extends CoreVerticle {
     private readonly eventBinding: any;
     private readonly allowUrl: string;
     private readonly allowMethod: string;
-    /**
-     *
-     */
+
     constructor(config: any, globalEvents: events) {
         super(config, "HttpVerticle", globalEvents);
         this.port = this.config.port as number;
@@ -29,7 +30,7 @@ export class HttpVerticle extends CoreVerticle {
         return new Promise<number>(res => {
             const server = http.createServer((req, response) => {
                 if(this.allowMethod !== req.method || this.allowUrl !== req.url) {
-                    response.end('method not support');
+                    this.handleFailureEvent(req, response, 'method not support');
                     return;
                 }
                 // TODO - handle empty body
@@ -39,12 +40,26 @@ export class HttpVerticle extends CoreVerticle {
                   const regBodyString = Buffer.concat(regBody).toString();
                   const regBodyJson = JSON.parse(regBodyString);
                   const service = regBodyJson.service
+                  const eventHandler = launcher.eventHandler[`${service.toString()}`] as RpcClient;
+                  if(!eventHandler){
+                      this.handleFailureEvent(req, response, 'service unavailable');
+                      return;
+                  }
                   const schema = this.eventBinding[service].schema
-                  const addr = this.eventBinding[service].addr
                   const validationResult = this.validator.validate(regBodyJson, schema).valid
-                  this.globalEvents.emit(addr, regBodyString);
-                  this.info(`validate event ${schema}: ${validationResult.toString()}`)
-                  response.end(`validate event ${schema}: ${validationResult.toString()}`)
+                  if(validationResult) {
+                    try {
+                        const result = await eventHandler.sendMessage(regBodyString);
+                        this.handleSuccessResponse(req, response, result);
+                        return;
+                    }catch(err){
+                        this.error(`exception on handling ${service} | request body: ${regBodyString}`);
+                        this.handleFailureEvent(req, response, 'unpredictable error');
+                        return;
+                    }
+                  } else {
+                    this.handleFailureEvent(req, response, 'invalid request');
+                  }
                 })
               });
             server.on('clientError', (err, socket) => {
@@ -67,5 +82,23 @@ export class HttpVerticle extends CoreVerticle {
             const schema = this.eventBinding[key].schema
             this.validator.addSchema(schema, schema.id)
         });
+    }
+    private handleSuccessResponse(request: http.IncomingMessage, response: http.ServerResponse, msg: string) {
+        const responseData = JSON.stringify({
+            data: msg,
+            success: true
+        });
+        this.sendResponse(request, response, responseData);
+    }
+    private handleFailureEvent(request: http.IncomingMessage, response: http.ServerResponse, msg: string){
+        const responseData = JSON.stringify({
+            error: msg,
+            success: false
+        });
+        this.sendResponse(request, response, responseData);
+    }
+    private sendResponse(request: http.IncomingMessage, response: http.ServerResponse, msg: string){
+        response.setHeader("Content-Type", "application/json");
+        response.end(msg);
     }
 }
