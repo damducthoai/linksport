@@ -33,8 +33,8 @@ export class RegisterHandler extends RpcServer {
                 error('message in processed: ' + curId);
             }, this.processTimeOut)
             
-            const client = await this.pool.connect()
-            const password = await bcrypt.hash(data.password, this.saltRounds)
+            const [client, password] = await Promise.all([this.pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
+
             const params = [curId, data.user, password, 0];
         
             client.query(this.insertQuery,params,(err: any, res: any) => {
