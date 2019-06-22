@@ -6,9 +6,11 @@ import { RpcClient } from './rpc_client';
 export class RabbitRpcClient extends RpcClient {
 
     private uuidv5 = require('uuid/v5');
+    private timeout: number;
 
     constructor(config: any, globalEvents: events) {
         super(config, "RabbitRpcClient", globalEvents);
+        this.timeout = this.config.timeout;
     }
 
     public sendMessage(message: string): Promise<string> {
@@ -25,15 +27,15 @@ export class RabbitRpcClient extends RpcClient {
                   }
                   const correlationId = this.uuidv5.DNS;
 
-                  let timeout = setTimeout(() => {
-                    this.info('timeout');
+                  const timeout = setTimeout(() => {
+                    this.error(`timeout: ${this.queue} | ${correlationId} | ${message}`);
                     channel.close(cb => {
                         this.info('close chanel')
                     })
-                    fail('time out');
-                  }, 1000*10)
+                    fail(`timeout: ${this.timeout}`);
+                  }, this.timeout)
                     
-                  this.info(`send request to: ${correlationId}, msg: ${message}`);
+                  this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);
 
                   channel.consume(q.queue, (msg) => {
                     clearTimeout(timeout);
@@ -55,6 +57,13 @@ export class RabbitRpcClient extends RpcClient {
                 });
               });
         })
+    }
+
+    protected afterInit(): Promise<number>{
+      return new Promise((success, fail) => {
+        this.info(`handler for ${this.queue}`);
+        success(1);
+      });
     }
 
     protected onEvent(event: string, globalEvents: events): void {

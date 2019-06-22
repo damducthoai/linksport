@@ -1,49 +1,29 @@
-// import * as fs from 'fs';
-// import { HttpVerticle } from './http-verticle';
-// const args = process.argv.slice(2);
-
-// const config = fs.readFileSync(args[0], 'utf8');
-// const configJson = JSON.parse(config);
-// const server = new HttpVerticle(configJson);
-// const port = configJson['httpServer']['port'] | 8080;
-
-// const server = http.createServer((req, res) => {
-//   req.on('data', (chunk) => {
-//     const regBody: Uint8Array[] = [];
-//     regBody.push(chunk);
-//     const regBodyString = Buffer.concat(regBody).toString();
-//     const regBodyJson = JSON.parse(regBodyString);
-//     res.end('data received')
-//   })
-// });
-// server.on('clientError', (err, socket) => {
-//   socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
-// });
-// server.listen(port);
-// console.log('http server start at ', port);
-import { AppLauncher } from 'backend-base/lib/index';
+import { AppLauncher, CoreVerticle } from 'backend-base/lib/index';
+import { RabbitRpcClient } from 'backend-rpc/lib/index';
 import { HttpVerticle } from './http-verticle';
-import { RabbitRpcClient } from './rabbit-rpc-client';
-import { RegisterVerticle } from './verticle/RegisterVerticle';
-
 
 export class BackendCoreLauncher extends AppLauncher {
-  /**
-   *
-   */
+  private verticles : CoreVerticle[] = [];
+
   constructor() {
     super();
-
   }
 
   public deploy(): Promise<number> {
     return new Promise((accept, reject) => {
       const server = new HttpVerticle(this.config, this.globalEvents);
-      const regiser = new RegisterVerticle(this.config, this.globalEvents);
-      const rpcclient = new RabbitRpcClient(this.config, this.globalEvents);
-      setTimeout(() => {
-        rpcclient.sendMessage('ahihi');
-      }, 5000)
+      this.verticles.push(server);
+      const eventBinding = this.config.HttpVerticle.eventBinding;
+      const addrs = Object.keys(eventBinding).map(e => eventBinding[`${e.toString()}`].addr);
+      addrs.forEach(addr => {
+          const rabitRpcConfig = this.config.RabbitRpcClient;
+          const privateConfig = {...rabitRpcConfig, "queue": addr}
+          const globalConfig = {...this.info, "RabbitRpcClient": privateConfig};
+          const rpcclient = new RabbitRpcClient(globalConfig, this.globalEvents);
+          this.verticles.push(rpcclient);
+      });
+      this.info(`deployed ${this.verticles.length} verticle(s)`);
+      accept(this.verticles.length)
     });
   }
   
