@@ -1,6 +1,7 @@
 import * as amqp from 'amqplib/callback_api';
 import { CoreVerticle } from 'backend-base/lib/index'
 import * as events from 'events';
+import { runInThisContext } from 'vm';
 
 export abstract class RpcClient extends CoreVerticle {
 
@@ -12,10 +13,15 @@ export abstract class RpcClient extends CoreVerticle {
 
   protected  chanel: amqp.Channel | undefined;
 
+  protected uuidv5 = require('uuid/v5');
+
+  private readonly tag: string;
+
   constructor(config: any, name: string, globalEvents: events) {
     super(config, name, globalEvents);
     this.queue = this.config.queue;
     this.server = this.config.server;
+    this.tag = `${this.name}_${this.uuidv5.DNS}`
   }
 
   public abstract sendMessage(message: string): Promise<string>;

@@ -11,7 +11,9 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
 
   private readonly server: string;
   
-  
+  private uuidv5 = require('uuid/v5');
+
+  private readonly tag: string;
   /**
    *
    */
@@ -20,6 +22,7 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
     this.queue = this.config.queue;
     this.server = this.config.server;
     this.processTimeOut = this.config.processTimeOut;
+    this.tag = `${this.name}_${this.uuidv5.DNS}`;
   }
 
   public onMessage(message: string): Promise<string> {
@@ -50,6 +53,8 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
             }).finally(() => {
               channel.ack(msg);
             });
+          }, {
+            consumerTag : this.tag
           });
           success(0)
         });

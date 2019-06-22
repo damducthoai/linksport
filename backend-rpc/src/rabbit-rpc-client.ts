@@ -5,7 +5,6 @@ import { RpcClient } from './rpc_client';
 
 export class RabbitRpcClient extends RpcClient {
 
-    private uuidv5 = require('uuid/v5');
     private timeout: number;
 
     constructor(config: any, globalEvents: events) {
@@ -37,8 +36,8 @@ export class RabbitRpcClient extends RpcClient {
             }, this.timeout)
               
             this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);
-
-            channel.consume(q.queue, (msg) => {
+            channel.consume(q.queue,(msg) => {
+              
               clearTimeout(timeout);
               if(!msg) {
                   throw new Error('Something bad happened');
