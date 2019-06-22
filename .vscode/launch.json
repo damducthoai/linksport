@@ -14,6 +14,20 @@
           "console": "integratedTerminal",
           "internalConsoleOptions": "neverOpen"
       },
+
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Debug-Handler-Nodemon",
+        "runtimeExecutable": "nodemon",
+        "program": "${workspaceFolder}/backend-handler/lib/index.js",
+        "args":[
+            "${workspaceFolder}/backend-handler/config.json"
+        ],
+        "restart": true,
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+    },
     
       {
           "type": "node",
