@@ -20,7 +20,7 @@ export class BackendCoreLauncher extends AppLauncher {
       const registerHandler = new RegisterHandler(this.config, this.globalEvents);
       this.verticles.push(registerHandler);
       const eventBinding = this.config.HttpVerticle.eventBinding;
-      const events = Object.keys(eventBinding).forEach(e => {
+      Object.keys(eventBinding).forEach(e => {
         const event = eventBinding[`${e.toString()}`] // object config
         const rabitRpcConfig = this.config.RabbitRpcClient;
           const privateConfig = {...rabitRpcConfig, "queue": event.addr}

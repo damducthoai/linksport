@@ -66,7 +66,7 @@ export class RabbitRpcClient extends RpcClient {
 
     protected afterInit(): Promise<number>{
       return new Promise((success, fail) => {
-        this.info(`handler for ${this.queue}`);
+        this.info(`client for ${this.queue}`);
         success(1);
       });
     }

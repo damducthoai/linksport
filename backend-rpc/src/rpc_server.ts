@@ -17,7 +17,6 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
     this.queue = this.config.queue;
     this.server = this.config.server;
     this.processTimeOut = this.config.processTimeOut;
-    this.onInit();
   }
 
   public onMessage(message: string): Promise<string> {
@@ -52,8 +51,15 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
               channel.ack(msg);
             });
           });
+          success(0)
         });
       });
+    });
+  }
+  protected afterInit(): Promise<number>{
+    return new Promise((success, fail) => {
+      this.info(`handler for ${this.queue}`);
+      success(1);
     });
   }
 }
