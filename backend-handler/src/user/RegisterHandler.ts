@@ -34,7 +34,7 @@ export class RegisterHandler extends RpcServer {
         } = JSON.parse(message);
         return new Promise(async (success, error) => {
             const channel = (this.channel as amqp.Channel);
-            this.info('send data to exchange');
+            
             const timeOut = setTimeout(() => {
                 error('message in processed: ' + curId);
             }, this.processTimeOut)
