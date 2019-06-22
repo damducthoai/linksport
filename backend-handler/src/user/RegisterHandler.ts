@@ -1,40 +1,48 @@
 import { Snowflake } from 'backend-base';
 import { RpcServer } from "backend-rpc";
+import * as bcrypt from 'bcrypt';
 import * as events from 'events';
-import * as cassandra from 'cassandra-driver';
+import { Pool } from  'pg';
+
 export class RegisterHandler extends RpcServer {
 
-    private idGenerator: Snowflake;
+    private readonly insertQuery = 'insert into account_info(id, username, password, status, create_at) values ($1,$2,$3,$4,CURRENT_TIMESTAMP)';
+    private readonly idGenerator: Snowflake;
+    private readonly pgSetting : any;
+    private readonly pool: any;
+    private readonly saltRounds = 10;
 
     constructor(config: any, protected globalEvents: events, extraConfigKeys?: string[]) {
         super(config, "RegisterHandler", globalEvents, extraConfigKeys);
         this.idGenerator = new Snowflake();
+        this.pgSetting = this.config.pgSetting;
+        this.pool = new Pool(this.pgSetting);
     }
     public onMessage(message: string): Promise<string>{
-        this.info('xx');
-        let data : {
+        const curId = this.idGenerator.generate();
+        const data : {
             user: string,
             password: string
         } = JSON.parse(message);
-        return new Promise((success, error) => {
-            const authProvider = new cassandra.auth.PlainTextAuthProvider('cassandra', 'cassandra');
-            const client = new cassandra.Client({contactPoints: ['3.0.101.223'], keyspace: 'dev', authProvider, localDataCenter: 'datacenter1'});
-            const query = 'insert into users(username, id, password) VALUES (?,?,?)';
-
+        return new Promise(async (success, error) => {
+            
             const timeOut = setTimeout(() => {
-                success('message processed: ' + this.idGenerator.generate());
+                error('message in processed: ' + curId);
             }, this.processTimeOut)
-            const params =  [ data.user, this.idGenerator.generate(), data.password ];
-            client.execute(query, params , { prepare: true })
-                    .then(result => {
-                        this.info('result' + result);
-                        success('data created');
-                    }).catch(error => {
-                        this.error('err cause ' + error);
-                        error('exception cause');
-                    }).finally(() => {
-                        clearTimeout(timeOut);
-                    });
+            
+            const client = await this.pool.connect()
+            const password = await bcrypt.hash(data.password, this.saltRounds)
+            const params = [curId, data.user, password, 0];
+
+            client.query(this.insertQuery,params,(err: any, res: any) => {
+                if(err){
+                    error('fail')
+                }
+                if(res){
+                    success("" + curId);
+                }
+                clearInterval(timeOut);
+            })
         });
     }
     protected onEvent(event: string, globalEvents: events): void {

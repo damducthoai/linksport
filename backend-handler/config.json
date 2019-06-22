@@ -4,6 +4,13 @@
         "processTimeOut": 10000,
         "name": "RegisterHandler",
         "queue": "register_queue_dev",
-        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672"
+        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
+        "pgSetting": {
+            "user": "postgres",
+            "host": "3.0.101.223",
+            "database": "postgres",
+            "password": "mysecretpassword",
+            "port": 5432
+        }
     }
 }
