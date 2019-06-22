@@ -7,6 +7,8 @@ export abstract class RpcServer implements IRpcServer {
   private readonly server: string;
 
   private readonly name: string;
+
+  private readonly processTimeOut: number;
   /**
    *
    */
@@ -14,6 +16,7 @@ export abstract class RpcServer implements IRpcServer {
     this.queue = config.queue;
     this.server = config.server;
     this.name = config.name;
+    this.processTimeOut = config.processTimeOut;
     this.onInit();
   }
 
@@ -35,11 +38,17 @@ export abstract class RpcServer implements IRpcServer {
         });
         channel.prefetch(1);
         channel.consume(this.queue, async (msg: any) => {
-          const result = await this.onMessage(msg);
-          channel.sendToQueue(msg.properties.replyTo, Buffer.from(result + ''), {
-            correlationId: msg.properties.correlationId,
+          this.onMessage(msg).then(onSuccess => {
+            channel.sendToQueue(msg.properties.replyTo, Buffer.from("0" + onSuccess), {
+              correlationId: msg.properties.correlationId,
+            });
+          }).catch(onErr => {
+            channel.sendToQueue(msg.properties.replyTo, Buffer.from("-1" + onErr), {
+              correlationId: msg.properties.correlationId,
+            });
+          }).finally(() => {
+            channel.ack(msg);
           });
-          channel.ack(msg);
         });
       });
     });
