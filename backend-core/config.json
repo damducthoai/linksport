@@ -59,6 +59,12 @@
     },
     "RabbitRpcClient": {
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
-        "timeout": 1000
+        "timeout": 100000000
+    },
+    "RegisterHandler": {
+        "processTimeOut": 1,
+        "name": "RegisterHandler",
+        "queue": "register_queue_dev",
+        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672"
     }
 }

@@ -1,5 +1,6 @@
 import { AppLauncher, CoreVerticle } from 'backend-base/lib/index';
 import { RabbitRpcClient } from 'backend-rpc/lib/index';
+import { RegisterHandler } from './handler/RegisterHandler';
 import { HttpVerticle } from './http-verticle';
 
 export class BackendCoreLauncher extends AppLauncher {
@@ -16,6 +17,7 @@ export class BackendCoreLauncher extends AppLauncher {
     return new Promise((accept, reject) => {
       const server = new HttpVerticle(this.config, this.globalEvents);
       this.verticles.push(server);
+      const registerHandler = new RegisterHandler(this.config);
       const eventBinding = this.config.HttpVerticle.eventBinding;
       const events = Object.keys(eventBinding).forEach(e => {
         const event = eventBinding[`${e.toString()}`] // object config

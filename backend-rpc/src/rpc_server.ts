@@ -1,18 +1,18 @@
 import * as amqp from 'amqplib/callback_api';
 import { IRpcServer } from 'backend-base/lib/index'
 export abstract class RpcServer implements IRpcServer {
-  
+  protected readonly processTimeOut: number;
+
   private readonly queue: string;
 
   private readonly server: string;
 
   private readonly name: string;
-
-  private readonly processTimeOut: number;
+  
   /**
    *
    */
-  protected constructor(config: any) {
+  public constructor(config: any) {
     this.queue = config.queue;
     this.server = config.server;
     this.name = config.name;
@@ -36,6 +36,7 @@ export abstract class RpcServer implements IRpcServer {
         channel.assertQueue(this.queue, {
           durable: false,
         });
+        
         channel.prefetch(1);
         channel.consume(this.queue, async (msg: any) => {
           this.onMessage(msg).then(onSuccess => {

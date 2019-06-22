@@ -14,54 +14,53 @@ export class RabbitRpcClient extends RpcClient {
     }
 
     public sendMessage(message: string): Promise<string> {
+      const correlationId = this.uuidv5.DNS;
+      
         return new Promise((success, fail) => {
-            this.connection.createChannel((error1: any, channel: amqp.Channel) => {
-                if (error1) {
-                  throw error1;
-                }
-                channel.assertQueue('', {
-                  exclusive: true
-                }, (error2, q) => {
-                  if (error2) {
-                    throw error2;
+          if(!this.chanel){
+            fail('chanel not available');
+            return;
+          }
+          const channel = this.chanel;
+          channel.assertQueue('', {
+            exclusive: true
+          }, (error2, q) => {
+            if (error2) {
+              throw error2;
+            }
+            const timeout = setTimeout(() => {
+              this.error(`timeout: ${this.queue} | ${correlationId} | ${message}`);
+              channel.close(cb => {
+                  this.info('close chanel')
+              })
+              fail(`timeout: ${this.timeout}`);
+            }, this.timeout)
+              
+            this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);
+
+            channel.consume(q.queue, (msg) => {
+              clearTimeout(timeout);
+              if(!msg) {
+                  throw new Error('Something bad happened');
+              }
+              if (msg.properties.correlationId === correlationId) {
+                  msg.content.toString();
+                  const rpcRawResponse =msg.content.toString();
+                  if(rpcRawResponse.startsWith("0")){
+                    success(rpcRawResponse.substring(1));
+                  } else {
+                    fail(rpcRawResponse.substring(1))
                   }
-                  const correlationId = this.uuidv5.DNS;
+              }
+            }, {
+              noAck: true
+            });
 
-                  const timeout = setTimeout(() => {
-                    this.error(`timeout: ${this.queue} | ${correlationId} | ${message}`);
-                    channel.close(cb => {
-                        this.info('close chanel')
-                    })
-                    fail(`timeout: ${this.timeout}`);
-                  }, this.timeout)
-                    
-                  this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);
-
-                  channel.consume(q.queue, (msg) => {
-                    clearTimeout(timeout);
-                    if(!msg) {
-                        throw new Error('Something bad happened');
-                    }
-                    if (msg.properties.correlationId === correlationId) {
-                        channel.ack(msg as amqp.Message);
-                        msg.content.toString();
-                        const rpcRawResponse =msg.content.toString();
-                        if(rpcRawResponse.startsWith("0")){
-                          success(rpcRawResponse.substring(1));
-                        } else {
-                          fail(rpcRawResponse.substring(1))
-                        }
-                    }
-                  }, {
-                    noAck: true
-                  });
-
-                  channel.sendToQueue(this.queue,
-                    Buffer.from(message),{ 
-                      correlationId: `${correlationId}`, 
-                      replyTo: q.queue });
-                });
-              });
+            channel.sendToQueue(this.queue,
+              Buffer.from(message),{ 
+                correlationId: `${correlationId}`, 
+                replyTo: q.queue });
+          });
         })
     }
 

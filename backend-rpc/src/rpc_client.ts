@@ -10,6 +10,8 @@ export abstract class RpcClient extends CoreVerticle {
 
   protected readonly server: string;
 
+  protected  chanel: amqp.Channel | undefined;
+
   constructor(config: any, name: string, globalEvents: events) {
     super(config, name, globalEvents);
     this.queue = this.config.queue;
@@ -19,14 +21,23 @@ export abstract class RpcClient extends CoreVerticle {
   public abstract sendMessage(message: string): Promise<string>;
 
   protected onInit(){
-    return new Promise<number>(res => {
+    return new Promise<number>((res, reject) => {
       amqp.connect(this.server, (error0, connection) => {
-        if (error0) {
-          throw error0;
+        if(error0){
+          reject('cannot connect to server');
+          return;
         }
         this.connection = connection;
+        this.connection.createChannel((error1: any, channel: amqp.Channel) => {
+          if (error1) {
+            reject('cannot create chanel to server');
+            return;  
+          }
+          this.chanel = channel;
+          res(0);
+        })
       });
-        res(0);
+        res(-1);
     })
  }
 }
