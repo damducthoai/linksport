@@ -37,7 +37,7 @@ export class RegisterHandler extends RpcServer {
 
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
-                    error('fail')
+                    error('user name exists')
                 }
                 if(res){
                     success("" + curId);

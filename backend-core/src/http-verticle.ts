@@ -54,7 +54,7 @@ export class HttpVerticle extends CoreVerticle {
                         return;
                     }catch(err){
                         this.error(`exception on handling ${service} | request body: ${regBodyString}`);
-                        this.handleFailureEvent(req, response, 'unpredictable error');
+                        this.handleFailureEvent(req, response, err.toString());
                         return;
                     }
                   } else {

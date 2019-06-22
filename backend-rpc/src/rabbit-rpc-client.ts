@@ -46,10 +46,11 @@ export class RabbitRpcClient extends RpcClient {
               if (msg.properties.correlationId === correlationId) {
                   msg.content.toString();
                   const rpcRawResponse =msg.content.toString();
+                  const responseNoFlag = rpcRawResponse.split("|");
                   if(rpcRawResponse.startsWith("0")){
-                    success(rpcRawResponse.substring(1));
+                    success(responseNoFlag[1]);
                   } else {
-                    fail(rpcRawResponse.substring(1))
+                    fail(responseNoFlag[1]);
                   }
               }
             }, {
