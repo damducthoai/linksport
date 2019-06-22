@@ -5,7 +5,7 @@ import * as winston from 'winston';
 export abstract class AppLauncher {
 
     protected readonly config:any;
-    protected readonly globalEvents = new events.EventEmitter();;
+    protected readonly globalEvents = new events.EventEmitter();
     
     private readonly name = "Launcher";
     private readonly logger: any;

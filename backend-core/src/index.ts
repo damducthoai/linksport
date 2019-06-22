@@ -17,7 +17,8 @@ export class BackendCoreLauncher extends AppLauncher {
     return new Promise((accept, reject) => {
       const server = new HttpVerticle(this.config, this.globalEvents);
       this.verticles.push(server);
-      const registerHandler = new RegisterHandler(this.config);
+      const registerHandler = new RegisterHandler(this.config, this.globalEvents);
+      this.verticles.push(registerHandler);
       const eventBinding = this.config.HttpVerticle.eventBinding;
       const events = Object.keys(eventBinding).forEach(e => {
         const event = eventBinding[`${e.toString()}`] // object config
