@@ -1,19 +1,20 @@
 import * as events from 'events';
 import * as fs from 'fs';
 import * as winston from 'winston';
+import { CoreVerticle } from './core-verticle';
 
 export abstract class AppLauncher {
 
     protected readonly config:any;
     protected readonly globalEvents = new events.EventEmitter();
+    protected readonly verticles : CoreVerticle[] = [];
     
-    private readonly name = "Launcher";
     private readonly logger: any;
     
     /**
      *
      */
-    constructor() {
+    constructor(private name: string) {
         this.logger = winston.createLogger({
             transports: [
                 new winston.transports.Console()
@@ -28,6 +29,7 @@ export abstract class AppLauncher {
         this.info(`launching ${this.config.profile}`);
         setTimeout(async () => {
             await this.deploy();
+            this.info(`deployed ${this.verticles.length} verticle(s)`);
         }, 1)
     }
     public abstract deploy():Promise<number>;
