@@ -1,7 +1,7 @@
 {
     "profile": "dev",
     "RegisterHandler": {
-        "processTimeOut": 1,
+        "processTimeOut": 10000,
         "name": "RegisterHandler",
         "queue": "register_queue_dev",
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672"

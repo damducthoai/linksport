@@ -39,7 +39,7 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
   
           channel.prefetch(1);
           channel.consume(this.queue, async (msg: any) => {
-            this.onMessage(msg).then(onSuccess => {
+            this.onMessage(msg.content.toString()).then(onSuccess => {
               channel.sendToQueue(msg.properties.replyTo, Buffer.from("0" + onSuccess), {
                 correlationId: msg.properties.correlationId,
               });
