@@ -44,7 +44,13 @@ export class RabbitRpcClient extends RpcClient {
                     }
                     if (msg.properties.correlationId === correlationId) {
                         channel.ack(msg as amqp.Message);
-                        success(msg.content.toString());
+                        msg.content.toString();
+                        const rpcRawResponse =msg.content.toString();
+                        if(rpcRawResponse.startsWith("0")){
+                          success(rpcRawResponse.substring(1));
+                        } else {
+                          fail(rpcRawResponse.substring(1))
+                        }
                     }
                   }, {
                     noAck: true
