@@ -1,7 +1,7 @@
 import * as amqp from 'amqplib/callback_api';
+import { Message } from 'amqplib/callback_api';
 import * as events from 'events';
 import { RpcClient } from './rpc_client';
-import { Message } from 'amqplib/callback_api';
 
 
 export class RabbitRpcClient extends RpcClient {
