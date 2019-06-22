@@ -1,6 +1,7 @@
 import * as amqp from 'amqplib/callback_api';
 import * as events from 'events';
 import { RpcClient } from './rpc_client';
+import { Message } from 'amqplib/callback_api';
 
 
 export class RabbitRpcClient extends RpcClient {
@@ -20,9 +21,10 @@ export class RabbitRpcClient extends RpcClient {
             fail('chanel not available');
             return;
           }
-          const channel = this.chanel;
+          const channel = this.chanel as amqp.Channel;
           channel.assertQueue('', {
-            exclusive: true
+            exclusive: true,
+            durable: false
           }, (error2, q) => {
             if (error2) {
               throw error2;
@@ -36,11 +38,15 @@ export class RabbitRpcClient extends RpcClient {
             }, this.timeout)
               
             this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);
-            channel.consume(q.queue,(msg) => {
-              
+            
+            channel.consume(q.queue,(msg: Message | null) => {
               clearTimeout(timeout);
               if(!msg) {
                   throw new Error('Something bad happened');
+              }
+              if(msg.fields.consumerTag){
+                channel.cancel(msg.fields.consumerTag);
+                channel.deleteQueue(q.queue);
               }
               if (msg.properties.correlationId === correlationId) {
                   msg.content.toString();
@@ -51,9 +57,11 @@ export class RabbitRpcClient extends RpcClient {
                   } else {
                     fail(responseNoFlag[1]);
                   }
+                  //channel.ack(msg, true);
+                  //channel.unbindQueue(q.queue, "", "");
               }
             }, {
-              noAck: true
+              noAck: false
             });
 
             channel.sendToQueue(this.queue,
