@@ -1,7 +1,6 @@
 import * as amqp from 'amqplib/callback_api';
-import { CoreVerticle } from 'backend-base/lib/index'
+import { CoreVerticle } from 'backend-base'
 import * as events from 'events';
-import { runInThisContext } from 'vm';
 
 export abstract class RpcClient extends CoreVerticle {
 

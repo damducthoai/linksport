@@ -1,5 +1,5 @@
-import { AppLauncher } from 'backend-base/lib/index';
-import { RabbitRpcClient } from 'backend-rpc/lib/index';
+import { AppLauncher } from 'backend-base';
+import { RabbitRpcClient } from 'backend-rpc';
 import { HttpVerticle } from './http-verticle';
 
 export class BackendCoreLauncher extends AppLauncher {

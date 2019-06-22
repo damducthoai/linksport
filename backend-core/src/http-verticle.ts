@@ -1,5 +1,5 @@
-import { CoreVerticle } from "backend-base/lib/index";
-import { RpcClient } from "backend-rpc/lib/rpc_client";
+import { CoreVerticle } from "backend-base";
+import { RpcClient } from "backend-rpc";
 import * as events from 'events';
 import * as http from 'http';
 import { Validator } from 'jsonschema';

@@ -1,0 +1,1 @@
+docker build -f ./core.dockerfile -t core/linkedsport .

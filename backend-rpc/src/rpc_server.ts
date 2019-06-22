@@ -46,13 +46,13 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
               channel.sendToQueue(msg.properties.replyTo, Buffer.from("0|" + onSuccess), {
                 correlationId: msg.properties.correlationId,
               });
+              channel.ack(msg);
             }).catch(onErr => {
               channel.sendToQueue(msg.properties.replyTo, Buffer.from("-1|" + onErr), {
                 correlationId: msg.properties.correlationId,
               });
-            }).finally(() => {
               channel.ack(msg);
-            });
+            })
           }, {
             consumerTag : this.tag
           });
