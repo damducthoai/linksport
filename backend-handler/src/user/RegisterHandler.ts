@@ -32,7 +32,7 @@ export class RegisterHandler extends RpcServer {
             const timeOut = setTimeout(() => {
                 error('message in processed: ' + curId);
             }, this.processTimeOut)
-            
+
             const [client, password] = await Promise.all([this.pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
 
             const params = [curId, data.user, password, 0];

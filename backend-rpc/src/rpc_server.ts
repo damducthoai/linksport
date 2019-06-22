@@ -34,7 +34,7 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
             failure(2);
           }
           channel.assertQueue(this.queue, {
-            durable: false,
+            durable: true,
           });
   
           channel.prefetch(1);
