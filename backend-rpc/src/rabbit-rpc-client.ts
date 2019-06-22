@@ -23,17 +23,15 @@ export class RabbitRpcClient extends RpcClient {
           }
           const channel = this.chanel as amqp.Channel;
           channel.assertQueue('', {
-            exclusive: true,
-            durable: false
+            durable: false,
+            exclusive: true
           }, (error2, q) => {
             if (error2) {
               throw error2;
             }
             const timeout = setTimeout(() => {
               this.error(`timeout: ${this.queue} | ${correlationId} | ${message}`);
-              channel.close(cb => {
-                  this.info('close chanel')
-              })
+              channel.deleteQueue(q.queue);
               fail(`timeout: ${this.timeout}`);
             }, this.timeout)
               
@@ -42,9 +40,11 @@ export class RabbitRpcClient extends RpcClient {
             channel.consume(q.queue,(msg: Message | null) => {
               clearTimeout(timeout);
               if(!msg) {
-                  throw new Error('Something bad happened');
+                  channel.deleteQueue(q.queue);
+                  fail('no result');
+                  return;
               }
-              if(msg.fields.consumerTag){
+              if(msg.fields.consumerTag){ // delete callback queue
                 channel.cancel(msg.fields.consumerTag);
                 channel.deleteQueue(q.queue);
               }
@@ -57,8 +57,6 @@ export class RabbitRpcClient extends RpcClient {
                   } else {
                     fail(responseNoFlag[1]);
                   }
-                  //channel.ack(msg, true);
-                  //channel.unbindQueue(q.queue, "", "");
               }
             }, {
               noAck: false
