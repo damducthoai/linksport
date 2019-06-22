@@ -5,9 +5,12 @@ import * as events from 'events';
 export abstract class RpcServer extends CoreVerticle implements IRpcServer {
   protected readonly processTimeOut: number;
 
+  protected channel: any;
+
   private readonly queue: string;
 
   private readonly server: string;
+  
   
   /**
    *
@@ -30,13 +33,10 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
           failure(1);
         }
         connection.createChannel((error1, channel) => {
+          this.channel = channel;
           if (error1) {
             failure(2);
-          }
-          channel.assertQueue(this.queue, {
-            durable: true,
-          });
-  
+          }  
           channel.prefetch(1);
           channel.consume(this.queue, async (msg: any) => {
             this.onMessage(msg.content.toString()).then(onSuccess => {

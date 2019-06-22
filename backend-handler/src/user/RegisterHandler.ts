@@ -1,3 +1,4 @@
+import * as amqp from 'amqplib/callback_api';
 import { Snowflake } from 'backend-base';
 import { RpcServer } from "backend-rpc";
 import * as bcrypt from 'bcrypt';
@@ -11,6 +12,7 @@ export class RegisterHandler extends RpcServer {
     private readonly pgSetting : any;
     private readonly pool: any;
     private readonly saltRounds: number;
+    private readonly exchange?: string;
 
     constructor(config: any, protected globalEvents: events, extraConfigKeys?: string[]) {
         super(config, "RegisterHandler", globalEvents, extraConfigKeys);
@@ -18,6 +20,9 @@ export class RegisterHandler extends RpcServer {
         this.pgSetting = this.config.pgSetting;
         this.pool = new Pool(this.pgSetting);
         this.saltRounds = this.config.saltRounds;
+        if(this.config.exchange) {
+            this.exchange = this.config.exchange;
+        }
     }
     public onMessage(message: string): Promise<string>{
         this.info(`receive request: ${message}`)
@@ -28,7 +33,8 @@ export class RegisterHandler extends RpcServer {
             password: string
         } = JSON.parse(message);
         return new Promise(async (success, error) => {
-            
+            const channel = (this.channel as amqp.Channel);
+            this.info('send data to exchange');
             const timeOut = setTimeout(() => {
                 error('message in processed: ' + curId);
             }, this.processTimeOut)
@@ -36,13 +42,20 @@ export class RegisterHandler extends RpcServer {
             const [client, password] = await Promise.all([this.pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
 
             const params = [curId, data.user, password, 0];
-        
+            
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
                     error('user name exists')
                 }
                 if(res){
                     success("" + curId);
+                    if(this.exchange){
+                        channel.publish(this.exchange,'', Buffer.from(JSON.stringify({
+                            id: curId,
+                            user: data.user
+                        })));
+                        this.info(`publist msg to exchange: ${this.exchange}`)
+                    }
                 }
                 client.release();
                 clearInterval(timeOut);
