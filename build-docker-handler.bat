@@ -1,1 +1,0 @@
-docker build -f ./handler.dockerfile -t handler/linkedsport .
