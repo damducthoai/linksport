@@ -1,0 +1,21 @@
+{
+  "name": "linksport",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-handler": "docker build -f handler.Dockerfile -t handler/linkedsport .",
+    "build-core": "docker build -f core.Dockerfile -t core/linkedsport ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damducthoai/linksport.git"
+  },
+  "author": "thoai.nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damducthoai/linksport/issues"
+  },
+  "homepage": "https://github.com/damducthoai/linksport#readme"
+}
