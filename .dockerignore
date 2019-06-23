@@ -1,0 +1,17 @@
+node_modules
+.dockerignore
+Dockerfile
+npm-debug.log
+.git
+.hg
+.svn
+lib
+
+./*/node_modules
+./*/.dockerignore
+./*/Dockerfile
+./*/npm-debug.log
+./*/.git
+./*/.hg
+./*/.svn
+./*/lib
