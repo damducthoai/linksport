@@ -1,6 +1,7 @@
 FROM node:8.16.0-jessie as builder
 
 RUN npm i webpack -g
+RUN npm i webpack-cli -g
 
 ADD backend-handler /usr/src/backend-handler
 ADD backend-rpc /usr/src/backend-rpc
