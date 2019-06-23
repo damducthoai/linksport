@@ -11,7 +11,9 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "start": "node lib/index.js config.json",
-    "startx": "nodemon lib/index.js config.json"
+    "startx": "nodemon lib/index.js config.json",
+    "bundle": "npm run build && webpack --config webpack.config.js",
+    "docker": "npm run bundle && docker build -f Dockerfile -t handler/linkedsport ."
   },
   "keywords": [
     "rpc",
@@ -20,6 +22,7 @@
   "author": "thoai.nguyen",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/cassandra-driver": "^4.0.3",
     "@types/node": "^12.0.8",
     "@types/pg": "^7.4.14",
@@ -27,17 +30,19 @@
     "prettier": "^1.18.2",
     "tslint": "^5.17.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.5.1",
+    "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
     "@types/amqplib": "^0.5.12",
-    "@types/bcrypt": "^3.0.0",
     "amqplib": "^0.5.3",
     "backend-base": "file:../backend-base",
     "backend-rpc": "file:../backend-rpc",
-    "bcrypt": "^3.0.6",
+    "bcryptjs": "^2.4.3",
     "cassandra-driver": "^4.1.0",
+    "node-gyp": "^5.0.1",
     "pg": "^7.11.0",
+    "pg-native": "^3.0.0",
     "winston": "^3.2.1"
   }
 }

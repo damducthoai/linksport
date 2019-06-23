@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+      
       {
           "type": "node",
           "request": "launch",
@@ -11,8 +12,8 @@
               "${workspaceFolder}/backend-core/config.json"
           ],
           "restart": true,
-          "console": "integratedTerminal",
-          "internalConsoleOptions": "neverOpen"
+          "console": "internalConsole",
+          "internalConsoleOptions": "openOnSessionStart"
       },
 
       {
@@ -26,7 +27,7 @@
         ],
         "restart": true,
         "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen"
+        "internalConsoleOptions": "openOnSessionStart"
     },
     
       {

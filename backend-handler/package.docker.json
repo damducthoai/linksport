@@ -1,7 +1,7 @@
 {
-  "name": "backend-base",
+  "name": "backend-handler",
   "version": "1.0.0",
-  "description": "base for linkedsport",
+  "description": "handler for http request",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -10,26 +10,20 @@
     "watch": "tsc --watch",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "start": "node lib/index.js",
+    "start": "node lib/index.js config.json",
+    "startx": "nodemon lib/index.js config.json",
     "bundle": "npm run build && webpack --config webpack.config.js"
   },
   "keywords": [
     "rpc",
-    "microservice",
-    "message",
-    "queue"
+    "server"
   ],
   "author": "thoai.nguyen",
   "license": "ISC",
   "devDependencies": {
-    "prettier": "^1.18.2",
-    "tslint": "^5.17.0",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.1",
-    "@types/node": "^12.0.8"
   },
   "dependencies": {
-    "hex2dec": "^1.1.2",
-    "winston": "^3.2.1"
+    "bcrypt": "^3.0.6",
+    "pg": "^7.11.0"
   }
 }

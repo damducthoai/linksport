@@ -1,7 +1,7 @@
 import * as amqp from 'amqplib/callback_api';
 import { Snowflake } from 'backend-base';
 import { RpcServer } from "backend-rpc";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as events from 'events';
 import { Pool } from  'pg';
 
