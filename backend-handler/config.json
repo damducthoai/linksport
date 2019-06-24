@@ -22,5 +22,9 @@
         "port": 5432,
         "idleTimeoutMillis": 30000,
         "connectionTimeoutMillis": 2000
+    },
+    "jwt": {
+        "key": "this_is_a_random_key",
+        "duration": 2592000000
     }
 }
