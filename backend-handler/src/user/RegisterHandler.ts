@@ -1,5 +1,6 @@
 import * as amqp from 'amqplib/callback_api';
 import { Snowflake } from 'backend-base';
+import { IBackendRegister } from 'backend-base';
 import { RpcServer } from "backend-rpc";
 import * as bcrypt from 'bcryptjs';
 import * as events from 'events';
@@ -25,10 +26,7 @@ export class RegisterHandler extends RpcServer {
         this.info(`receive request: ${message}`)
         const curId = this.idGenerator.generate();
         this.info(`request id: ${curId}`);
-        const data : {
-            user: string,
-            password: string
-        } = JSON.parse(message);
+        const data : IBackendRegister = JSON.parse(message);
         return new Promise(async (success, error) => {
             const channel = (this.channel as amqp.Channel);
             
