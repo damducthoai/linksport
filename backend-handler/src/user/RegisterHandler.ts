@@ -4,21 +4,18 @@ import { RpcServer } from "backend-rpc";
 import * as bcrypt from 'bcryptjs';
 import * as events from 'events';
 import { Pool } from  'pg';
+import { launcher } from '../index'
 
 export class RegisterHandler extends RpcServer {
 
     private readonly insertQuery = 'insert into account_info(id, username, password, status, create_at) values ($1,$2,$3,$4,CURRENT_TIMESTAMP)';
     private readonly idGenerator: Snowflake;
-    private readonly pgSetting : any;
-    private readonly pool: any;
     private readonly saltRounds: number;
     private readonly exchange?: string;
 
     constructor(config: any, protected globalEvents: events, extraConfigKeys?: string[]) {
         super(config, "RegisterHandler", globalEvents, extraConfigKeys);
         this.idGenerator = new Snowflake();
-        this.pgSetting = this.config.pgSetting;
-        this.pool = new Pool(this.pgSetting);
         this.saltRounds = this.config.saltRounds;
         if(this.config.exchange) {
             this.exchange = this.config.exchange;
@@ -38,8 +35,10 @@ export class RegisterHandler extends RpcServer {
             const timeOut = setTimeout(() => {
                 error('message in processed: ' + curId);
             }, this.processTimeOut)
+            
+            const pool = launcher.getPgPool() as Pool;
 
-            const [client, password] = await Promise.all([this.pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
+            const [client, password] = await Promise.all([pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
 
             const params = [curId, data.user, password, 0];
             

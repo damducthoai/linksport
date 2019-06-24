@@ -22,14 +22,16 @@
   "author": "thoai.nguyen",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^12.0.8",
+    "@types/pg": "^7.4.14",
     "prettier": "^1.18.2",
     "tslint": "^5.17.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.1",
-    "@types/node": "^12.0.8"
+    "typescript": "^3.5.1"
   },
   "dependencies": {
     "hex2dec": "^1.1.2",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "pg": "^7.11.0"
   }
 }

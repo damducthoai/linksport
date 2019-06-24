@@ -6,16 +6,16 @@
         "queue": "register_queue_dev",
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
         "saltRounds": 10,
-        "exchange": "onsuccess_register_exchanges_dev",
-        "pgSetting": {
-            "user": "postgres",
-            "host": "3.0.101.223",
-            "database": "postgres",
-            "max": 200,
-            "password": "mysecretpassword",
-            "port": 5432,
-            "idleTimeoutMillis": 30000,
-            "connectionTimeoutMillis": 2000
-        }
+        "exchange": "onsuccess_register_exchanges_dev"
+    },
+    "postgresql": {
+        "user": "postgres",
+        "host": "3.0.101.223",
+        "database": "postgres",
+        "max": 200,
+        "password": "mysecretpassword",
+        "port": 5432,
+        "idleTimeoutMillis": 30000,
+        "connectionTimeoutMillis": 2000
     }
 }
