@@ -1,6 +1,7 @@
 import { AppLauncher, PgVerticle } from 'backend-base';
 import { Pool } from  'pg';
 import { RegisterHandler } from './user/RegisterHandler';
+import { LoginHandler } from './user/login_handler';
 
 export class BackendEventHandlerLauncher extends AppLauncher {
 
@@ -20,6 +21,8 @@ export class BackendEventHandlerLauncher extends AppLauncher {
             const registerHandler = new RegisterHandler(this.config, this.globalEvents);
             this.verticles.push(registerHandler);
 
+            const loginHandler = new LoginHandler(this.config, this.globalEvents);
+            this.verticles.push(loginHandler)
             success(0);
         });
     }

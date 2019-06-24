@@ -2,11 +2,16 @@
     "profile": "dev",
     "RegisterHandler": {
         "processTimeOut": 100000,
-        "name": "RegisterHandler",
         "queue": "register_queue_dev",
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
         "saltRounds": 10,
         "exchange": "onsuccess_register_exchanges_dev"
+    },
+    "LoginHandler": {
+        "processTimeOut": 100000,
+        "queue": "login_queue_dev",
+        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
+        "saltRounds": 10
     },
     "postgresql": {
         "user": "postgres",

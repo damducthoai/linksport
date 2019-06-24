@@ -1,11 +1,13 @@
 import * as events from 'events';
 import * as winston from 'winston';
+import { BackendError } from './backend_error';
 export abstract class CoreVerticle {
     protected readonly extraConfig = {};
     protected readonly name: string;
     protected readonly config: any;
     protected readonly globalConfig: any;
     protected readonly logger: any;
+    protected readonly errorCodes = BackendError;
     /**
      *
      */

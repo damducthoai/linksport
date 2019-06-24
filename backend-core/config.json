@@ -15,14 +15,20 @@
                         "service": {
                             "type": "string"
                         },
-                        "user": {
-                            "type": "string"
+                        "data": {
+                            "type": "object",
+                            "properties":{
+                                "user": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["user", "password"]
                         },
-                        "password": {
-                            "type": "string"
-                        }
-                    },
-                    "required": ["user", "password"]
+                        "required": ["service", "data"]
+                    }
                 }
             },
             "register": {
