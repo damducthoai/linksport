@@ -3,7 +3,7 @@ const BackendError = {
     serviceNotFound: -2,
     serviceUnavailable: -3,
     loginFail: -4,
-    registerFailt: -5
+    registerFail: -5
 }
 export {
     BackendError

@@ -33,7 +33,7 @@ export class RegisterHandler extends RpcServer {
             const channel = (this.channel as amqp.Channel);
             
             const timeOut = setTimeout(() => {
-                error('message in processed: ' + curId);
+                error(this.errorCodes.timeout);
             }, this.processTimeOut)
             
             const pool = launcher.getPgPool() as Pool;
@@ -44,7 +44,7 @@ export class RegisterHandler extends RpcServer {
             
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
-                    error('user name exists')
+                    error(this.errorCodes.registerFail)
                 }
                 if(res){
                     success("" + curId);
