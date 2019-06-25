@@ -3,7 +3,6 @@ import { Message } from 'amqplib/callback_api';
 import * as events from 'events';
 import { RpcClient } from './rpc_client';
 
-
 export class RabbitRpcClient extends RpcClient {
 
     private timeout: number;
@@ -32,7 +31,7 @@ export class RabbitRpcClient extends RpcClient {
             const timeout = setTimeout(() => {
               this.error(`timeout: ${this.queue} | ${correlationId} | ${message}`);
               channel.deleteQueue(q.queue);
-              fail(`timeout: ${this.timeout}`);
+              fail(this.errorCodes.timeout.code);
             }, this.timeout)
               
             this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);
@@ -51,11 +50,12 @@ export class RabbitRpcClient extends RpcClient {
               if (msg.properties.correlationId === correlationId) {
                   msg.content.toString();
                   const rpcRawResponse =msg.content.toString();
-                  const responseNoFlag = rpcRawResponse.split("|");
+                  const splitterIndex = rpcRawResponse.indexOf("|");
+                  const responseNoFlag = rpcRawResponse.substring(splitterIndex + 1);
                   if(rpcRawResponse.startsWith("0")){
-                    success(responseNoFlag[1]);
+                    success(responseNoFlag);
                   } else {
-                    fail(responseNoFlag[1]);
+                    fail(responseNoFlag);
                   }
               }
             }, {

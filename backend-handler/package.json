@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/amqplib": "^0.5.12",
     "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.3.2",
     "@types/node": "^12.0.8",
     "@types/pg": "^7.4.14",
     "nodemon": "^1.19.1",
@@ -37,6 +38,7 @@
     "backend-base": "file:../backend-base",
     "backend-rpc": "file:../backend-rpc",
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
     "node-gyp": "^5.0.1",
     "pg": "^7.11.0",
     "winston": "^3.2.1"

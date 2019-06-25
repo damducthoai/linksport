@@ -1,24 +1,22 @@
 import * as amqp from 'amqplib/callback_api';
 import { Snowflake } from 'backend-base';
+import { IBackendRegister } from 'backend-base';
 import { RpcServer } from "backend-rpc";
 import * as bcrypt from 'bcryptjs';
 import * as events from 'events';
 import { Pool } from  'pg';
+import { launcher } from '../index'
 
 export class RegisterHandler extends RpcServer {
 
     private readonly insertQuery = 'insert into account_info(id, username, password, status, create_at) values ($1,$2,$3,$4,CURRENT_TIMESTAMP)';
     private readonly idGenerator: Snowflake;
-    private readonly pgSetting : any;
-    private readonly pool: any;
     private readonly saltRounds: number;
     private readonly exchange?: string;
 
     constructor(config: any, protected globalEvents: events, extraConfigKeys?: string[]) {
         super(config, "RegisterHandler", globalEvents, extraConfigKeys);
         this.idGenerator = new Snowflake();
-        this.pgSetting = this.config.pgSetting;
-        this.pool = new Pool(this.pgSetting);
         this.saltRounds = this.config.saltRounds;
         if(this.config.exchange) {
             this.exchange = this.config.exchange;
@@ -28,24 +26,23 @@ export class RegisterHandler extends RpcServer {
         this.info(`receive request: ${message}`)
         const curId = this.idGenerator.generate();
         this.info(`request id: ${curId}`);
-        const data : {
-            user: string,
-            password: string
-        } = JSON.parse(message);
+        const data : IBackendRegister = JSON.parse(message);
         return new Promise(async (success, error) => {
             const channel = (this.channel as amqp.Channel);
             
             const timeOut = setTimeout(() => {
-                error('message in processed: ' + curId);
+                error(this.errorCodes.timeout);
             }, this.processTimeOut)
+            
+            const pool = launcher.getPgPool() as Pool;
 
-            const [client, password] = await Promise.all([this.pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
+            const [client, password] = await Promise.all([pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
 
             const params = [curId, data.user, password, 0];
             
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
-                    error('user name exists')
+                    error(this.errorCodes.registerFail.code)
                 }
                 if(res){
                     success("" + curId);

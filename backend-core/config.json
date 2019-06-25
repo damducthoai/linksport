@@ -7,6 +7,7 @@
         "eventBinding": {
             "login": {
                 "addr": "login_queue_dev",
+                "authRequired": false,
                 "schema": {
                     "id": "/Login",
                     "type": "object",
@@ -14,18 +15,25 @@
                         "service": {
                             "type": "string"
                         },
-                        "user": {
-                            "type": "string"
+                        "data": {
+                            "type": "object",
+                            "properties":{
+                                "user": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["user", "password"]
                         },
-                        "password": {
-                            "type": "string"
-                        }
-                    },
-                    "required": ["user", "password"]
+                        "required": ["service", "data"]
+                    }
                 }
             },
             "register": {
                 "addr": "register_queue_dev",
+                "authRequired": false,
                 "schema": {
                     "id": "/Register",
                     "type": "object",
@@ -60,12 +68,5 @@
     "RabbitRpcClient": {
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
         "timeout": 100000000
-    },
-    "RegisterHandler": {
-        "processTimeOut": 1,
-        "name": "RegisterHandler",
-        "queue": "register_queue_dev",
-        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
-        "saltRounds": 10
     }
 }

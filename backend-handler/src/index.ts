@@ -1,6 +1,11 @@
-import { AppLauncher, CoreVerticle } from 'backend-base';
+import { AppLauncher, PgVerticle } from 'backend-base';
+import { Pool } from  'pg';
 import { RegisterHandler } from './user/RegisterHandler';
+import { LoginHandler } from './user/login_handler';
+
 export class BackendEventHandlerLauncher extends AppLauncher {
+
+    private  pgVerticle?: PgVerticle;
     /**
      *
      */
@@ -10,13 +15,22 @@ export class BackendEventHandlerLauncher extends AppLauncher {
 
     public deploy(): Promise<number> {
         return new Promise((success, fail) => {
+            this.pgVerticle = new PgVerticle(this.config, "PgVerticle", this.globalEvents);
+            this.verticles.push(this.pgVerticle);
+
             const registerHandler = new RegisterHandler(this.config, this.globalEvents);
             this.verticles.push(registerHandler);
+
+            const loginHandler = new LoginHandler(this.config, this.globalEvents);
+            this.verticles.push(loginHandler)
             success(0);
         });
+    }
+    public getPgPool(): Pool | any {
+        return this.pgVerticle ? this.pgVerticle.getPool() : null;
     }
 }
 const launcher = new BackendEventHandlerLauncher();
 export {
-    launcher,
+    launcher
 }

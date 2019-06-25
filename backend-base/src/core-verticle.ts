@@ -1,14 +1,18 @@
 import * as events from 'events';
 import * as winston from 'winston';
+import { BackendError } from './backend_error';
 export abstract class CoreVerticle {
     protected readonly extraConfig = {};
     protected readonly name: string;
     protected readonly config: any;
-    private readonly logger: any;
+    protected readonly globalConfig: any;
+    protected readonly logger: any;
+    protected readonly errorCodes = BackendError;
     /**
      *
      */
-    constructor(config: any, name: string, protected globalEvents: events, private extraConfigKeys?: string[]) {
+    constructor(config: any, name: string, protected globalEvents: events, protected extraConfigKeys?: string[]) {
+        this.globalConfig = config;
         this.name = name;
         this.config = config[name];
         this.logger = winston.createLogger({
@@ -21,9 +25,6 @@ export abstract class CoreVerticle {
                 const curConfig = config[k];
                 Object.assign(this.extraConfig, curConfig);
             })
-        }
-        if(this.config.eventHandler){
-            this.onEvent(this.config.eventHandler, globalEvents);
         }
         setTimeout(async () => {
             await this.onInit();
@@ -50,8 +51,5 @@ export abstract class CoreVerticle {
     }
     protected error(msg: string) {
         this.logger.error(`${this.name} | ${msg}`);
-    }
-
-    protected abstract onEvent(event: string, globalEvents: events): void;
-    
+    }    
 }
