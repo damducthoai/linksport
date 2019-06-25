@@ -6,6 +6,7 @@ export abstract class Task {
     protected readonly name: string;
     protected readonly logger: any;
     protected readonly globalConfig: any;
+    protected readonly config: any;
     protected readonly errorCodes = BackendError;
     /**
      *
@@ -13,6 +14,7 @@ export abstract class Task {
     constructor(name: string, config: any) {
         this.name = name;
         this.globalConfig = config;
+        this.config = config[name]
         this.logger = winston.createLogger({
             transports: [
                 new winston.transports.Console()
