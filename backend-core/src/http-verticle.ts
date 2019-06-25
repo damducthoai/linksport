@@ -7,7 +7,9 @@ import { launcher } from './index'
 
 
 export class HttpVerticle extends CoreVerticle {
-    
+
+    protected uuidv5 = require('uuid/v5');
+    private space = 'http';
     private readonly port: number;
     private readonly validator: Validator;
     private readonly eventBinding: any;
@@ -49,7 +51,9 @@ export class HttpVerticle extends CoreVerticle {
                   const validationResult = this.validator.validate(regBodyJson, schema).valid
                   if(validationResult) {
                     try {
-                        const result = await eventHandler.sendMessage(regBodyString);
+                        const requestId = this.uuidv5(this.space, this.uuidv5.DNS);
+                        regBodyJson.request_id = requestId;
+                        const result = await eventHandler.sendMessage(JSON.stringify(regBodyJson));
                         this.handleSuccessResponse(req, response, result);
                         return;
                     }catch(err){

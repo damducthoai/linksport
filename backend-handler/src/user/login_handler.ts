@@ -1,9 +1,6 @@
-import * as amqp from 'amqplib/callback_api';
-import {  IRequestModel, IBackendLogin } from 'backend-base';
+import {  IBackendLogin, IRequestModel } from 'backend-base';
 import { RpcServer } from "backend-rpc";
-import * as bcrypt from 'bcryptjs';
 import * as events from 'events';
-import * as jwt from 'jsonwebtoken';
 import { LoginTask } from './task/login_task';
 
 
