@@ -1,11 +1,10 @@
 import { Pool } from  'pg';
-import { config } from 'winston';
 
 export class PgPool {
 
-    public static getInstance(_config: any){
+    public static getInstance(config: any){
         if(this.instance == null){
-            this.instance = new PgPool(_config);
+            this.instance = new PgPool(config);
         }
         return this.instance;
     };

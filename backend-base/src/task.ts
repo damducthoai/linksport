@@ -20,7 +20,7 @@ export abstract class Task {
         });
     }
     public run(input: IRequestModel):Promise<IRequestModel> {
-        return this.run(input);
+        return this.exec(input);
     };
     protected abstract exec(input: IRequestModel):Promise<IRequestModel>;
    

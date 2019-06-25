@@ -49,7 +49,7 @@ export class HttpVerticle extends CoreVerticle {
                   const validationResult = this.validator.validate(regBodyJson, schema).valid
                   if(validationResult) {
                     try {
-                        const result = await eventHandler.sendMessage(JSON.stringify(regBodyJson.data));
+                        const result = await eventHandler.sendMessage(regBodyString);
                         this.handleSuccessResponse(req, response, result);
                         return;
                     }catch(err){

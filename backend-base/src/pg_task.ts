@@ -8,6 +8,6 @@ export abstract class PgTask extends Task {
     }
     
     protected async getPgClient(){
-        return await PgPool.getInstance(this.globalConfig).getClient();
+        return await PgPool.getInstance(this.globalConfig.postgresql).getClient();
     }
 }

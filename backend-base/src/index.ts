@@ -4,9 +4,11 @@ import { CoreVerticle } from './core-verticle';
 import { IRpcClient } from './irpc_client'
 import { IRpcServer } from './irpc_server';
 import { AppLauncher } from './launcher';
+import {IRequestModel } from './models/backend_request';
 import { IBackendLogin } from './models/msg/backend_login'
 import { IBackendMsg } from './models/msg/backend_msg'
 import { IBackendRegister } from './models/msg/backend_register'
+import { PgTask } from './pg_task';
 import { PgVerticle } from './pg_verticle'
 import { Task } from './task';
 import { Snowflake } from './utils/Snowflake';
@@ -23,5 +25,7 @@ export {
     IBackendMsg,
     IBackendRegister,
     Task,
-    WorkFlow
+    WorkFlow,
+    PgTask,
+    IRequestModel
 };
