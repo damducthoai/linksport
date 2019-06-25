@@ -5,11 +5,9 @@ import * as jwt from 'jsonwebtoken';
 export class LoginTask extends PgTask {
 
     private query = "select password , id from account_info where username = $1";
-    private readonly saltRounds: number;
 
     constructor(config: any) {
         super('LoginTask', config);
-        this.saltRounds = this.config.saltRounds as number || 10;
     }
 
     protected exec(input: IRequestModel): Promise<IRequestModel> {

@@ -11,8 +11,6 @@ export class LoginHandler extends RpcServer {
 
     private readonly loginTask: LoginTask;
 
-    private query = "select password , id from account_info where username = $1";
-
     constructor(config: any, protected globalEvents: events, extraConfigKeys?: string[]) {
         super(config, "LoginHandler", globalEvents, extraConfigKeys);
         this.loginTask = new LoginTask(this.globalConfig);
@@ -20,7 +18,7 @@ export class LoginHandler extends RpcServer {
     public onMessage(message: string): Promise<string> {
         const data : IRequestModel = JSON.parse(message);
         return new Promise(async(success, fail) => {
-            
+
             const timeOut = setTimeout(() => {
                 fail(this.errorCodes.timeout.code);
             }, this.processTimeOut)

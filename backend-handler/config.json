@@ -26,9 +26,6 @@
     "RegisterTask": {
         "saltRounds": 10
     },
-    "LoginTask":{
-        "saltRounds": 10
-    },
     "jwt": {
         "key": "this_is_a_random_key",
         "duration": 2592000000
