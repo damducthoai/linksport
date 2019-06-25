@@ -2,10 +2,7 @@ import * as amqp from 'amqplib/callback_api';
 import { Snowflake, IRequestModel} from 'backend-base';
 import { IBackendRegister } from 'backend-base';
 import { RpcServer } from "backend-rpc";
-import * as bcrypt from 'bcryptjs';
 import * as events from 'events';
-import { Pool } from  'pg';
-import { launcher } from '../index'
 import { RegisterTask } from './task/register_task';
 
 export class RegisterHandler extends RpcServer {
@@ -31,23 +28,21 @@ export class RegisterHandler extends RpcServer {
         this.info(`request id: ${curId}`);
         const data : IRequestModel = JSON.parse(message);
         return new Promise(async (success, fail) => {
-            const channel = (this.channel as amqp.Channel);
-            
             const timeOut = setTimeout(() => {
                 fail(this.errorCodes.timeout);
             }, this.processTimeOut)
 
             this.task.run(data).then(res => {
+                const registerData = res.data as IBackendRegister;
+                registerData.password = "****";
                 success(res.toString());
-                // if(this.exchange){
-                //     channel.publish(this.exchange,'', Buffer.from(JSON.stringify({
-                //         id: res,
-                //         user: data.user
-                //     })));
-                //     this.info(`publist msg to exchange: ${this.exchange}`)
-                // };
+                clearTimeout(timeOut);
+                if(this.exchange){
+                    const channel = (this.channel as amqp.Channel);
+                    channel.publish(this.exchange,'', Buffer.from(registerData.toString()));
+                }
             }).catch(err => {
-                fail(this.errorCodes.registerFail.code);
+                fail(err);
                 clearTimeout(timeOut);
             })
         });
