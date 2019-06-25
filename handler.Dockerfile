@@ -13,6 +13,7 @@ ADD backend-base /usr/src/backend-base
 
 WORKDIR /usr/src/backend-base
 RUN npm install
+RUN npm i pg-native -save --unsafe
 RUN npm run build
 
 WORKDIR /usr/src/backend-rpc
