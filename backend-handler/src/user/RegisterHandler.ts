@@ -9,7 +9,7 @@ import { launcher } from '../index'
 
 export class RegisterHandler extends RpcServer {
 
-    private readonly insertQuery = 'insert into account_info(id, username, password, status, create_at) values ($1,$2,$3,$4,CURRENT_TIMESTAMP)';
+    private readonly insertQuery = 'insert into account_info(id, username, password, status, create_at) values (shard_register.id_generator(),$1,$2,$3,CURRENT_TIMESTAMP) returning id';
     private readonly idGenerator: Snowflake;
     private readonly saltRounds: number;
     private readonly exchange?: string;
@@ -38,21 +38,24 @@ export class RegisterHandler extends RpcServer {
 
             const [client, password] = await Promise.all([pool.connect(), bcrypt.hash(data.password, this.saltRounds)])
 
-            const params = [curId, data.user, password, 0];
+            const params = [data.user, password, 0];
             
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
                     error(this.errorCodes.registerFail.code)
                 }
-                if(res){
-                    success("" + curId);
+                if(res && (res.rows as []).length > 0){
+                    const createdId = res.rows[0].id;
+                    success(createdId);
                     if(this.exchange){
                         channel.publish(this.exchange,'', Buffer.from(JSON.stringify({
-                            id: curId,
+                            id: createdId,
                             user: data.user
                         })));
                         this.info(`publist msg to exchange: ${this.exchange}`)
                     }
+                } else {
+                    error(this.errorCodes.registerFail.code)
                 }
                 client.release();
                 clearInterval(timeOut);
