@@ -19,15 +19,21 @@ export abstract class Task {
             ]
         });
     }
-    public abstract exec(input: IRequestModel):Promise<IRequestModel>;
-    
+    public run(input: IRequestModel):Promise<IRequestModel> {
+        return this.run(input);
+    };
+    protected abstract exec(input: IRequestModel):Promise<IRequestModel>;
+   
     protected info(msg: string){
         this.logger.info(`${this.name} | ${msg}`);
     }
+
     protected warn(msg: string) {
         this.logger.warn(`${this.name} | ${msg}`);
     }
+
     protected error(msg: string) {
         this.logger.error(`${this.name} | ${msg}`);
     } 
+    
 }

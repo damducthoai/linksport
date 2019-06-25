@@ -14,7 +14,10 @@ export class WorkFlow extends Task {
         this.stopWhenFail = stopWhenFail ? true : false;
     }
     
-    public exec(input: IRequestModel):Promise<IRequestModel> {
+    public run(input: IRequestModel):Promise<IRequestModel> {
+        return this.exec(input);
+    }
+    protected exec(input: IRequestModel):Promise<IRequestModel> {
         return new Promise(async (success, fail) => {
             let result = input;
             for (const task of this.taskList) {
@@ -23,14 +26,18 @@ export class WorkFlow extends Task {
                     return;
                 }
                 try {
-                    result = await task.exec(result);
+                    result = await task.run(result);
                 }catch(err){
-
+                    this.error(`excetion occur: ` + err);
+                    if(this.stopWhenFail){
+                        fail(result);
+                        return;
+                    }
                 }
             }
             success(result);
         })
-    }
+    };
     protected addTask(task: Task){
         this.taskList.push(task);
     }
