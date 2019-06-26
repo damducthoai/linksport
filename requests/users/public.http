@@ -1,0 +1,27 @@
+## register user
+POST http://localhost:8888/api/v1
+Content-Type: application/json
+
+{
+  "service": "register",
+  "data": {
+    "user":"xthoaixssxxxxxx",
+    "password": "1234"
+  }
+}
+
+###
+
+## login
+POST http://localhost:8888/api/v1
+Content-Type: application/json
+
+{
+  "service": "login",
+  "data": {
+    "user":"thoai",
+    "password": "1234"
+  }
+}
+
+###

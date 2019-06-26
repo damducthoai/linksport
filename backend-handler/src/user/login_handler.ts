@@ -17,7 +17,7 @@ export class LoginHandler extends RpcServer {
         return new Promise(async(success, fail) => {
 
             const timeOut = setTimeout(() => {
-                fail(this.errorCodes.timeout.code);
+                fail(this.errorCodes.timeout);
             }, this.processTimeOut)
 
             this.loginTask.run(data).then(res => {

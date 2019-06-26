@@ -18,7 +18,7 @@ export class LoginTask extends PgTask {
             
             client.query(this.query,params, async (err: any, res: any) => {
                 if(err){
-                    fail(this.errorCodes.registerFail.code);
+                    fail(this.errorCodes.registerFail);
                 } else {
                     if(res && (res.rows as []).length > 0){
                         const hashed = res.rows[0].password;
@@ -37,10 +37,10 @@ export class LoginTask extends PgTask {
                             }, key);
                             success(input);
                         } else {
-                            fail(this.errorCodes.loginFail.code);
+                            fail(this.errorCodes.loginFail);
                         }
                     } else {
-                        fail(this.errorCodes.registerFail.code)
+                        fail(this.errorCodes.registerFail)
                     }
                 }
                 client.release();

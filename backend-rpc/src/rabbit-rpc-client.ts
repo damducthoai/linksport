@@ -31,7 +31,7 @@ export class RabbitRpcClient extends RpcClient {
             const timeout = setTimeout(() => {
               this.error(`timeout: ${this.queue} | ${correlationId} | ${message}`);
               channel.deleteQueue(q.queue);
-              fail(this.errorCodes.timeout.code);
+              fail(this.errorCodes.timeout);
             }, this.timeout)
               
             this.info(`send request to: ${this.queue} | ${correlationId}, msg: ${message}`);

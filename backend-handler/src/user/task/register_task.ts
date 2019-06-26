@@ -17,14 +17,15 @@ export class RegisterTask extends PgTask {
             
             client.query(this.insertQuery,params,(err: any, res: any) => {
                 if(err){
-                    fail(this.errorCodes.registerFail.code);
+                    fail(this.errorCodes.registerFail);
                 } else {
                     if(res && (res.rows as []).length > 0){
                         const createdId = res.rows[0].id;
                         data.id = createdId;
+                        input.data = data;
                         success(input);
                     } else {
-                        fail(this.errorCodes.registerFail.code)
+                        fail(this.errorCodes.registerFail)
                     }
                 }
                 client.release();
