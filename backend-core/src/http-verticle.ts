@@ -89,14 +89,14 @@ export class HttpVerticle extends CoreVerticle {
     }
     private handleSuccessResponse(request: http.IncomingMessage, response: http.ServerResponse, msg: string) {
         const responseData = JSON.stringify({
-            data: msg,
+            data: this.getJson(msg),
             success: true
         });
         this.sendResponse(request, response, responseData);
     }
     private handleFailureEvent(request: http.IncomingMessage, response: http.ServerResponse, msg: string){
         const responseData = JSON.stringify({
-            error: msg,
+            error: this.getJson(msg),
             success: false
         });
         this.sendResponse(request, response, responseData);
@@ -104,5 +104,14 @@ export class HttpVerticle extends CoreVerticle {
     private sendResponse(request: http.IncomingMessage, response: http.ServerResponse, msg: string){
         response.setHeader("Content-Type", "application/json");
         response.end(msg);
+    }
+    private getJson(input: string) {
+        let res = input;
+        try {
+            res = JSON.parse(input);
+        } catch (e) {
+            res = input;
+        }
+        return res;
     }
 }

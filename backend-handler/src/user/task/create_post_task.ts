@@ -1,7 +1,6 @@
 import {IRequestModel} from "backend-base";
 import {CassandraTask} from "backend-base/lib/cassandra_task";
 import {IBackendCreatePost} from "backend-base/lib/models/msg/backend_create_post";
-import * as Long from "long";
 
 export class CreatePostTask extends CassandraTask {
 
