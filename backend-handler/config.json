@@ -13,6 +13,11 @@
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
         "saltRounds": 10
     },
+    "CreatePostHandler": {
+        "processTimeOut": 100000,
+        "queue": "create_post_queue_dev",
+        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672"
+    },
     "postgresql": {
         "user": "postgres",
         "host": "3.0.101.223",
@@ -29,5 +34,18 @@
     "jwt": {
         "key": "this_is_a_random_key",
         "duration": 2592000000
+    },
+    "cassandra": {
+        "option": {
+            "contactPoints": [
+                "3.0.101.223"
+            ],
+            "localDataCenter": "datacenter1",
+            "keyspace": "dev"
+        },
+        "authProvider": {
+            "username": "cassandra",
+            "password": "cassandra"
+        }
     }
 }

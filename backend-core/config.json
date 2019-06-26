@@ -1,72 +1,116 @@
 {
-    "profile": "dev",
-    "HttpVerticle": {
-        "port": 8888,
-        "allowUrl": "/api/v1",
-        "allowMethod": "POST",
-        "eventBinding": {
-            "login": {
-                "addr": "login_queue_dev",
-                "authRequired": false,
-                "schema": {
-                    "id": "/Login",
-                    "type": "object",
-                    "properties": {
-                        "service": {
-                            "type": "string"
-                        },
-                        "data": {
-                            "type": "object",
-                            "properties":{
-                                "user": {
-                                    "type": "string"
-                                },
-                                "password": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": ["user", "password"]
-                        },
-                        "required": ["service", "data"]
-                    }
-                }
+  "profile": "dev",
+  "HttpVerticle": {
+    "port": 8888,
+    "allowUrl": "/api/v1",
+    "allowMethod": "POST",
+    "eventBinding": {
+      "login": {
+        "addr": "login_queue_dev",
+        "authRequired": false,
+        "schema": {
+          "id": "/Login",
+          "type": "object",
+          "properties": {
+            "service": {
+              "type": "string"
             },
-            "register": {
-                "addr": "register_queue_dev",
-                "authRequired": false,
-                "schema": {
-                    "id": "/Register",
-                    "type": "object",
-                    "properties": {
-                        "service": {
-                            "type": "string"
-                        },
-                        "data": {
-                            "type": "object",
-                            "properties":{
-                                "user": {
-                                    "type": "string"
-                                },
-                                "password": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": ["user", "password"]
-                        },
-                        "required": ["service", "data"]
-                    }
+            "data": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
                 }
-            }
+              },
+              "required": [
+                "user",
+                "password"
+              ]
+            },
+            "required": [
+              "service",
+              "data"
+            ]
+          }
         }
-    },
-    "cassandra": {
-        "username": "cassandra",
-        "password": "cassandra",
-        "host": "3.0.101.223",
-        "port": 9042
-    },
-    "RabbitRpcClient": {
-        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
-        "timeout": 100000000
+      },
+      "register": {
+        "addr": "register_queue_dev",
+        "authRequired": false,
+        "schema": {
+          "id": "/Register",
+          "type": "object",
+          "properties": {
+            "service": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "user",
+                "password"
+              ]
+            },
+            "required": [
+              "service",
+              "data"
+            ]
+          }
+        }
+      },
+      "create_post": {
+        "addr": "create_post_queue_dev",
+        "authRequired": false,
+        "schema": {
+          "id": "/CreatePost",
+          "type": "object",
+          "properties": {
+            "service": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "author": {
+                  "type": "number"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "author",
+                "content"
+              ]
+            },
+            "required": [
+              "service",
+              "data"
+            ]
+          }
+        }
+      }
     }
+  },
+  "cassandra": {
+    "username": "cassandra",
+    "password": "cassandra",
+    "host": "3.0.101.223",
+    "port": 9042
+  },
+  "RabbitRpcClient": {
+    "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672",
+    "timeout": 100000000
+  }
 }
