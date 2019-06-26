@@ -1,8 +1,8 @@
 import {IRequestModel} from "backend-base";
+import {IBackendCreatePost} from "backend-base/lib/models/msg/backend_create_post";
 import {RpcServer} from "backend-rpc";
 import * as events from 'events';
 import {CreatePostTask} from "./task/create_post_task";
-import {IBackendCreatePost} from "backend-base/lib/models/msg/backend_create_post";
 
 export class CreatePostHandler extends RpcServer{
 
