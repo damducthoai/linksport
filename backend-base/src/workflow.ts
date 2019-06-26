@@ -1,5 +1,5 @@
 import { IRequestModel } from './models/backend_request';
-import { Task } from './Task';
+import { Task } from './task';
 
 export class WorkFlow extends Task {
     protected readonly name: string;

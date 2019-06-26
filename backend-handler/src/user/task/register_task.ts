@@ -21,7 +21,7 @@ export class RegisterTask extends PgTask {
                 } else {
                     if(res && (res.rows as []).length > 0){
                         const createdId = res.rows[0].id;
-                        
+                        data.id = createdId;
                         success(input);
                     } else {
                         fail(this.errorCodes.registerFail.code)

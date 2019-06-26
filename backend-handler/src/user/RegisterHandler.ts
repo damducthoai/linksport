@@ -35,7 +35,7 @@ export class RegisterHandler extends RpcServer {
             this.task.run(data).then(res => {
                 const registerData = res.data as IBackendRegister;
                 registerData.password = "****";
-                success(res.toString());
+                success((registerData.id || "****").toString());
                 clearTimeout(timeOut);
                 if(this.exchange){
                     const channel = (this.channel as amqp.Channel);
