@@ -3,6 +3,7 @@ import {IRequestConnect} from "backend-base/lib/models/msg/request_connect";
 import {RpcServer} from "backend-rpc";
 import * as events from 'events';
 import {RequestConnectTask} from "./task/request_connect_task";
+import {RequestDisConnectTask} from "./task/request_disconnect_task";
 
 export class UserRelationHandler extends RpcServer{
 
@@ -11,7 +12,8 @@ export class UserRelationHandler extends RpcServer{
     constructor(config: any, protected globalEvents: events, extraConfigKeys?: string[]){
         super(config, "UserRelationHandler", globalEvents, extraConfigKeys);
         this.typeHandler = {...this.typeHandler,
-            1: new RequestConnectTask(this.globalConfig)
+            1: new RequestConnectTask(this.globalConfig),
+            2: new RequestDisConnectTask(this.globalConfig)
         }
     }
     public onMessage(message: string): Promise<string>{

@@ -2,29 +2,28 @@ import {IRequestModel} from "backend-base";
 import {CassandraTask} from "backend-base/lib/cassandra_task";
 import {IRequestConnect} from "backend-base/lib/models/msg/request_connect";
 
-export class RequestConnectTask extends CassandraTask {
+export class RequestDisConnectTask extends CassandraTask {
 
-    private query = "insert into users_relation(user_id, status, event_time, issuer, relate_to) VALUES (?,?,?,?,?)";
+    private query = "delete from users_relation where user_id = ? and relate_to = ?";
 
     constructor(config: any) {
-        super('RequestConnectTask', config);
+        super('RequestDisConnectTask', config);
     }
 
     protected exec(input: IRequestModel): Promise<IRequestModel> {
         const data = input.data as IRequestConnect;
         const client = this.getClient();
-        const time = Date.now();
         return new Promise<IRequestModel>(async (success, fail) => {
             client.batch([
                 {
                     query: this.query,
                     // tslint:disable-next-line:object-literal-sort-keys
-                    params: [data.issuer, 1, time, data.issuer, data.relate_to]
+                    params: [data.issuer, data.relate_to]
                 },
                 {
                     query: this.query,
                     // tslint:disable-next-line:object-literal-sort-keys
-                    params: [data.relate_to, 0, time, data.issuer, data.issuer]
+                    params: [data.relate_to,data.issuer]
                 }
             ], { prepare: true }).then(res => {
                 success(input);
