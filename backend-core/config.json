@@ -7,7 +7,7 @@
     "eventBinding": {
       "login": {
         "addr": "login_queue_dev",
-        "authRequired": false,
+        "auth": false,
         "schema": {
           "id": "/Login",
           "type": "object",
@@ -39,7 +39,7 @@
       },
       "register": {
         "addr": "register_queue_dev",
-        "authRequired": false,
+        "auth": false,
         "schema": {
           "id": "/Register",
           "type": "object",
@@ -71,7 +71,7 @@
       },
       "create_post": {
         "addr": "create_post_queue_dev",
-        "authRequired": false,
+        "auth": true,
         "schema": {
           "id": "/CreatePost",
           "type": "object",
@@ -92,6 +92,42 @@
               "required": [
                 "author",
                 "content"
+              ]
+            },
+            "required": [
+              "service",
+              "data"
+            ]
+          }
+        }
+      },
+      "rconnect": {
+        "addr": "rconnect_queue_dev",
+        "auth": true,
+        "schema": {
+          "id": "/rconnect",
+          "type": "object",
+          "properties": {
+            "service": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "issuer": {
+                  "type": "number"
+                },
+                "relate_to": {
+                  "type": "number"
+                },
+                "type": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "issuer",
+                "relate_to",
+                "type"
               ]
             },
             "required": [

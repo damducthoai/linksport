@@ -18,6 +18,11 @@
         "queue": "create_post_queue_dev",
         "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672"
     },
+    "UserRelationHandler": {
+        "processTimeOut": 100000,
+        "queue": "rconnect_queue_dev",
+        "server": "amqp://linkedsport:linkedsportPssword@3.0.101.223:5672"
+    },
     "postgresql": {
         "user": "postgres",
         "host": "3.0.101.223",

@@ -1,5 +1,5 @@
 import * as amqp from 'amqplib/callback_api';
-import { Snowflake, IRequestModel} from 'backend-base';
+import { IRequestModel, Snowflake} from 'backend-base';
 import { IBackendRegister } from 'backend-base';
 import { RpcServer } from "backend-rpc";
 import * as events from 'events';

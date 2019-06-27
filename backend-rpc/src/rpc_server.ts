@@ -14,6 +14,8 @@ export abstract class RpcServer extends CoreVerticle implements IRpcServer {
   private uuidv5 = require('uuid/v5');
 
   private readonly tag: string;
+
+  
   /**
    *
    */

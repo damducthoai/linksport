@@ -23,7 +23,7 @@ export class CreatePostHandler extends RpcServer{
                 const data = res.data as IBackendCreatePost;
                 data.content = "";
                 clearInterval(timeOut);
-                success(JSON.stringify(data));
+                success(message);
             }).catch((err: any) => {
                 clearInterval(timeOut);
                 fail(err);
